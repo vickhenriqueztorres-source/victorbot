@@ -1,0 +1,46 @@
+{
+  "users": {
+    "5999654619": {
+      "chatId": "5999654619",
+      "status": "ACTIVE",
+      "step": "CHECKING_ID",
+      "createdAt": "2026-09-29T14:44:24.027Z",
+      "firstName": "Brenda",
+      "username": "brendacostaop",
+      "updatedAt": "2026-09-29T16:31:43.833Z",
+      "lastInteractionAt": "2026-09-29T16:31:43.833Z",
+      "followUps": {},
+      "brokerId": "778899",
+      "waitingDepositSince": "2026-09-29T16:31:36.268Z",
+      "licenseCode": "IFX-eyJ2IjoxLCJpZCI6IkxJQy1EOUw0NCIsInN1YiI6IkJyZW5kYSAoNzc4ODk5KSIsInBsYW4iOiJWSVRBTElDSU8iLCJpYXQiOjE3OTA2OTk1MDM4MjcsImV4cCI6MjEwNjA1OTUwMzgyN30.IHj8lYJDgrdmnG8jgaxfIqRhlHNn4mKQy-UldufspcXX5C_UyIREDXJ2i5wA4Iaa1-9Q_876VweGD2sMwz2azQ",
+      "activatedAt": "2026-09-29T16:31:43.833Z"
+    }
+  },
+  "brokerToChat": {
+    "778899": "5999654619"
+  },
+  "channelEvents": [
+    {
+      "id": "evt-deposito-778899",
+      "timestamp": "2026-09-29T16:28:00.000Z",
+      "rawText": "🎉 Depósito aprovado!\nID: 778899\nValor: R$ 50,00\nStatus: Confirmado",
+      "type": "DEPOSITO",
+      "brokerId": "778899",
+      "email": "brenda@trader.com",
+      "amount": "R$ 50,00",
+      "isHandled": false
+    }
+  ],
+  "licenses": [
+    {
+      "brokerId": "778899",
+      "chatId": "5999654619",
+      "code": "IFX-eyJ2IjoxLCJpZCI6IkxJQy1EOUw0NCIsInN1YiI6IkJyZW5kYSAoNzc4ODk5KSIsInBsYW4iOiJWSVRBTElDSU8iLCJpYXQiOjE3OTA2OTk1MDM4MjcsImV4cCI6MjEwNjA1OTUwMzgyN30.IHj8lYJDgrdmnG8jgaxfIqRhlHNn4mKQy-UldufspcXX5C_UyIREDXJ2i5wA4Iaa1-9Q_876VweGD2sMwz2azQ",
+      "holder": "Brenda (778899)",
+      "plan": "VITALICIO",
+      "durationDays": 3650,
+      "expiresAtIso": "2036-09-26T16:31:43.827Z",
+      "createdAtIso": "2026-09-29T16:31:43.832Z"
+    }
+  ]
+}
