@@ -14,6 +14,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import http from 'node:http';
 import { fileURLToPath } from 'node:url';
 import { config } from './config.js';
 import { db } from './database.js';
@@ -31,6 +32,16 @@ if (!config.botToken) {
   console.error('Exemplo: TELEGRAM_BOT_TOKEN=123456789:ABCdefGhIjkLmNoPqRsTuVwXyZ\n');
   process.exit(1);
 }
+
+// Servidor HTTP leve para health check do Render (evita erro de port scan)
+const port = process.env.PORT || 3000;
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+  res.end('Bot Infiltrus Online e Ativo 🚀');
+});
+server.listen(port, () => {
+  console.log(`[HTTP] Servidor de health check ativo na porta ${port}`);
+});
 
 const api = new TelegramApi(config.botToken);
 
