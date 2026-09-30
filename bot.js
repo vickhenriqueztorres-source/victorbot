@@ -84,8 +84,9 @@ async function sendHumanMessage(chatId, textOrArray, options = {}, delayMs = con
  */
 async function deliverAccessToUser(chatId, clientName, brokerId, plan = 'DEMO VIP') {
   const name = clientName || 'Trader';
-  const isRealVip = plan === 'VITALICIO VIP' || plan === 'VITALICIO';
-  console.log(`[LIBERAÇÃO] Iniciando entrega (${plan}) para ${name} (ID Corretora: ${brokerId}, Chat: ${chatId})`);
+  const isRealVip = plan === 'VIP REAL (2 MESES)' || plan === 'VITALICIO VIP' || plan === 'VITALICIO' || plan === 'VIP REAL';
+  const durationDays = isRealVip ? (config.realLicenseDays || 60) : (config.demoLicenseDays || 3);
+  console.log(`[LIBERAÇÃO] Iniciando entrega (${plan} - ${durationDays} dias) para ${name} (ID Corretora: ${brokerId}, Chat: ${chatId})`);
 
   // Mensagem inicial humanizada simulando processamento criptográfico
   await sendHumanMessage(chatId, isRealVip ? mensagens.gerandoChave() : mensagens.gerandoChaveDemo(), {}, 1800);
@@ -93,7 +94,7 @@ async function deliverAccessToUser(chatId, clientName, brokerId, plan = 'DEMO VI
   // 1. Gera a licença oficial assinada com a chave privada ECDSA P-256
   const license = await issueClientLicense({
     holder: `${name} (${brokerId})`,
-    durationDays: config.licenseDays || 3650,
+    durationDays,
     plan: plan
   });
 
@@ -152,21 +153,22 @@ async function deliverAccessToUser(chatId, clientName, brokerId, plan = 'DEMO VI
     await api.sendMessage(chatId, desafioMsg, { reply_markup: keyboard });
   }
 
-  console.log(`[SUCESSO] Acesso (${plan}) entregue com sucesso para ${name} (ID: ${brokerId})`);
+  console.log(`[SUCESSO] Acesso (${plan} - ${durationDays} dias) entregue com sucesso para ${name} (ID: ${brokerId})`);
 }
 
 /**
- * Realiza o upgrade proativo do usuário para VIP REAL VITALÍCIO quando o depósito é confirmado
+ * Realiza o upgrade proativo do usuário para VIP REAL (2 MESES / 60 DIAS) quando o depósito é confirmado
  */
 async function upgradeToRealVip(chatId, clientName, brokerId, amount = 'confirmado') {
   const name = clientName || 'Trader';
-  console.log(`[UPGRADE VIP] Emitindo credencial VIP Real para ${name} (ID: ${brokerId})`);
+  const durationDays = config.realLicenseDays || 60;
+  console.log(`[UPGRADE VIP] Emitindo credencial VIP Real (${durationDays} dias / 2 Meses) para ${name} (ID: ${brokerId})`);
 
-  // Emite licença com o plano oficial VITALICIO VIP
+  // Emite licença com o plano oficial VIP REAL (2 MESES)
   const license = await issueClientLicense({
     holder: `${name} (${brokerId})`,
-    durationDays: 3650,
-    plan: 'VITALICIO VIP'
+    durationDays,
+    plan: 'VIP REAL (2 MESES)'
   });
 
   db.recordLicense({
@@ -188,7 +190,7 @@ async function upgradeToRealVip(chatId, clientName, brokerId, amount = 'confirma
   });
 
   await simulateTyping(chatId, 2000);
-  const vipMsg = mensagens.entregaLicencaVipReal(name, license.code);
+  const vipMsg = mensagens.entregaLicencaVipReal(name, license.code, durationDays);
   await api.sendMessage(chatId, vipMsg);
   console.log(`[SUCESSO] Upgrade VIP Real entregue para ${name} (ID: ${brokerId})`);
 }
@@ -342,7 +344,7 @@ async function handlePrivateMessage(msg) {
       if (!targetUser) {
         return api.sendMessage(chatId, `❌ Nenhum usuário com o ID ou Chat <code>${targetId}</code> foi encontrado.`);
       }
-      const plan = (mode && mode.toLowerCase() === 'demo') ? 'DEMO VIP' : 'VITALICIO VIP';
+      const plan = (mode && mode.toLowerCase() === 'demo') ? 'DEMO VIP' : 'VIP REAL (2 MESES)';
       await api.sendMessage(chatId, `⚡ Forçando liberação manual (${plan}) para ${targetUser.firstName} (ID: ${targetId})...`);
       await deliverAccessToUser(targetUser.chatId, targetUser.firstName, targetId, plan);
       return api.sendMessage(chatId, `✅ Liberação (${plan}) concluída com sucesso!`);
@@ -405,7 +407,7 @@ async function handlePrivateMessage(msg) {
         {},
         1600
       );
-      return deliverAccessToUser(chatId, firstName, brokerId, 'VITALICIO VIP');
+      return deliverAccessToUser(chatId, firstName, brokerId, 'VIP REAL (2 MESES)');
     }
 
     // Cliente informou o ID -> MODELO DE ATIVAÇÃO EM 2 ETAPAS:

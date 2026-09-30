@@ -53,8 +53,14 @@ export const config = {
   personaName: process.env.PERSONA_NAME || 'Victor',
   personaRole: process.env.PERSONA_ROLE || 'Mentor Infiltrus',
 
-  // Tempo de validade padrão da licença liberada (em dias, 3650 = Vitalício)
-  licenseDays: Number(process.env.LICENSE_DAYS || 3650),
+  // Tempo de validade da licença Demo inicial (em dias: 3 dias / 72h de teste gratuito)
+  demoLicenseDays: Number(process.env.DEMO_LICENSE_DAYS || 3),
+
+  // Tempo de validade da licença Real pós-primeiro depósito (em dias: 60 dias = 2 meses)
+  realLicenseDays: Number(process.env.REAL_LICENSE_DAYS || 60),
+
+  // Tempo de validade padrão de fallback
+  licenseDays: Number(process.env.LICENSE_DAYS || 60),
 
   // Caminho do pacote da extensão a ser enviado ao cliente
   extensionZipPath: process.env.EXTENSION_ZIP_PATH || (

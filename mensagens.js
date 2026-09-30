@@ -88,20 +88,20 @@ export const mensagens = {
   gerandoChaveDemo: () =>
     `Te estoy generando tu clave de acceso en este mismo instante, dame solo un segundito... 🔑`,
 
-  entregaLicencaDemo: (nome, codigoLicenca, dias, plano) =>
+  entregaLicencaDemo: (nome, codigoLicenca, dias = 3, plano = 'DEMO VIP') =>
     `¡Listo, ${nome}! Tu herramienta está <b>100% activa</b> 🚀\n\n` +
-    `🔑 <b>Tu Clave de Acceso:</b>\n` +
+    `🔑 <b>Tu Clave de Acceso Demo:</b>\n` +
     `<code>${codigoLicenca}</code>\n` +
     `<i>(Toca la clave de arriba para copiarla al portapapeles)</i>\n\n` +
     `💎 <b>Plan:</b> ${plano || 'DEMO VIP'} (Motor Cuántico M1 Habilitado)\n` +
-    `⏳ <b>Vigencia:</b> ACCESO INMEDIATO SIN COSTO`,
+    `⏳ <b>Vigencia:</b> ${dias} DÍAS DE PRUEBA COMPLETA (72 Horas)`,
 
   desafioDemo: () =>
-    `💡 <b>Tu primer paso recomendado (Riesgo Cero):</b>\n\n` +
+    `💡 <b>Tu primer paso recomendado (Tienes 72 Horas de Prueba Gratuita):</b>\n\n` +
     `1️⃣ Abre tu broker en <b>Cuenta DEMO</b> (con saldo ficticio de prueba).\n` +
     `2️⃣ Conéctale la extensión y deja que el motor matemático analice el mercado en vivo.\n` +
     `3️⃣ Ejecuta tus primeras <b>2 a 3 señales</b> en M1 sin arriesgar ni un solo centavo de tu propio dinero.\n\n` +
-    `¡Vas a ver con tus propios ojos cómo clava las entradas! Avísame por acá en cuanto la tengas lista en pantalla para acompañarte 😊🎯`,
+    `¡Tienes <b>3 días completos</b> para comprobar cómo clava las entradas! Avísame por acá en cuanto la tengas lista en pantalla 😊🎯`,
 
   botoesEntregaDemo: [
     [{ text: '📖 ¿Cómo instalar la extensión?', callback_data: 'faq_instalar' }],
@@ -127,31 +127,32 @@ export const mensagens = {
   depositoDetectadoProativo: (nome, valor) =>
     `¡¡FELICITACIONES, ${nome}!! 🎉🚀\n\n` +
     `¡Acaba de confirmarse en el sistema tu depósito de ${valor} en el broker! 👏\n\n` +
-    `¡Tu cuenta acaba de ser ascendida oficialmente a <b>STATUS VIP REAL VITALICIO</b>! 💎`,
+    `¡Tu cuenta acaba de ser ascendida oficialmente a <b>STATUS VIP REAL (2 MESES COMPLETOS)</b>! 💎`,
 
   // --------------------------------------------------------------------------
   // 8. GENERANDO LA CLAVE VIP REAL
   // --------------------------------------------------------------------------
   gerandoChave: () =>
-    `¡Excelente! Ya identifiqué la confirmación de tu depósito en la plataforma.\n\nTe estoy actualizando tu clave criptográfica a VIP REAL en este mismo instante, dame solo un segundito... 💎`,
+    `¡Excelente! Ya identifiqué la confirmación de tu depósito en la plataforma.\n\nTe estoy actualizando tu clave criptográfica a VIP REAL (2 Meses) en este mismo instante, dame solo un segundito... 💎`,
 
   // --------------------------------------------------------------------------
-  // 9. ENTREGA DE LA LICENCIA VIP OFICIAL (REAL VITALICIA)
+  // 9. ENTREGA DE LA LICENCIA VIP OFICIAL (REAL 2 MESES / 60 DÍAS)
   // --------------------------------------------------------------------------
-  entregaLicenca: (nome, codigoLicenca, dias, plano) =>
+  entregaLicenca: (nome, codigoLicenca, dias = 60, plano = 'VIP REAL (2 MESES)') =>
     `¡Listo, ${nome}! ¡Tu acceso VIP está <b>100% liberado</b>! 🚀\n\n` +
     `🔑 <b>Tu Clave Oficial VIP:</b>\n` +
     `<code>${codigoLicenca}</code>\n` +
     `<i>(Solo toca la clave de arriba para copiarla al portapapeles)</i>\n\n` +
-    `⏳ <b>Vigencia:</b> ACCESO VITALICIO\n` +
-    `💎 <b>Plan:</b> VITALICIO REAL / Motor Cuántico M1 Oficial\n` +
+    `⏳ <b>Vigencia:</b> 2 MESES DE ACCESO VIP (${dias} Días)\n` +
+    `💎 <b>Plan:</b> ${plano || 'VIP REAL (2 MESES)'} / Motor Cuántico M1 Oficial\n` +
     `✅ <b>Estado:</b> Saldo real habilitado y ganancias 100% retirables a tu banco 📈💰`,
 
-  entregaLicencaVipReal: (nome, codigoLicenca) =>
-    `🔑 <b>Tu Nueva Clave VIP Real Vitalicia:</b>\n` +
+  entregaLicencaVipReal: (nome, codigoLicenca, dias = 60) =>
+    `🔑 <b>Tu Nueva Clave VIP Real Activada:</b>\n` +
     `<code>${codigoLicenca}</code>\n` +
     `<i>(Toca la clave para copiarla)</i>\n\n` +
-    `💎 <b>Plan:</b> VITALICIO REAL (Operaciones con Dinero Real)\n` +
+    `💎 <b>Plan:</b> VIP REAL (Operaciones con Dinero Real)\n` +
+    `⏳ <b>Vigencia:</b> 2 MESES DE ACCESO VIP (${dias} Días)\n` +
     `✅ <b>Estado:</b> 100% Habilitado para retirar ganancias a tu cuenta bancaria\n\n` +
     `¡Pégala en tu extensión para actualizar tu credencial o sigue operando de una vez! ¡Vamos con todo por esos resultados en saldo real! 🎯📈`,
 
@@ -309,7 +310,7 @@ export const mensagens = {
     `1️⃣ Abre el broker y entra a la sección <b>Depósito / Cajero</b>.\n` +
     `2️⃣ Selecciona tu método preferido (Pix, tarjeta de débito/crédito, transferencia bancaria local o cripto/Binance Pay).\n` +
     `3️⃣ Fondea tu cuenta con el monto que prefieras (desde apenas <b>$5 a $10 USD</b> o equivalente en tu moneda local).\n\n` +
-    `💡 <b>Recuerda:</b> Todo el saldo es <b>100% tuyo</b> para operar y retirar cuando quieras. A mí no me pagas nada: el software te queda <b>VITALICIO</b> de regalo y el bot te asciende a <b>VIP REAL</b> de inmediato 🎯`
+    `💡 <b>Recuerda:</b> Todo el saldo es <b>100% tuyo</b> para operar y retirar cuando quieras. A mí no me pagas nada: recibes <b>2 MESES COMPLETOS (60 DÍAS)</b> de acceso VIP oficial para operar y el bot te asciende a <b>VIP REAL</b> de inmediato 🎯`
   ],
 
   botoesDudaComoReal: [
@@ -405,9 +406,9 @@ export const mensagens = {
   // Caso B3: Conversión Natural a Cuenta Real / FTD (12-24 horas)
   followUpDemoConversaoReal: (nome, brokerId) => [
     `¡Hola, ${nome}! ¿Cómo estás? 😊`,
-    `Ya viste con tus propios ojos cómo analiza el mercado el algoritmo en tu cuenta Demo. Pero seamos sinceros: <b>los dólares de prueba no pagan cuentas ni se pueden retirar al banco</b> 😉`,
+    `Ya viste con tus propios ojos cómo analiza el mercado el algoritmo en tu cuenta Demo. Recuerda que tu prueba gratuita de <b>3 días</b> está corriendo ⏳`,
     `El siguiente paso natural es fondear tu cuenta real para empezar a retirar ganancias de verdad. Puedes arrancar con el monto mínimo de tu país (desde apenas <b>$5 USD</b> o el equivalente en Pix/tarjeta local).\n\n` +
-    `Apenas hagas tu depósito, mi sistema lo detecta en automático y te asciende de inmediato a <b>STATUS VIP REAL VITALICIO</b> con soporte prioritario 🚀\n\n` +
+    `Apenas hagas tu depósito, mi sistema lo detecta en automático y te asciende de inmediato a <b>STATUS VIP REAL (2 MESES / 60 DÍAS)</b> con soporte prioritario 🚀\n\n` +
     `¿Quieres que te ayude a ver los métodos de pago disponibles para tu país?`
   ],
 
@@ -419,9 +420,9 @@ export const mensagens = {
 
   // Caso B4: Último llamado / Reserva VIP (36-48 horas)
   followUpDemoUltimoLlamado: (nome, brokerId) => [
-    `¡Hola de nuevo, ${nome}! Te escribo directo para saber cómo vienen tus operaciones 🎯`,
-    `Recuerda que tu cuenta con el ID <code>${brokerId}</code> tiene reservado el beneficio del <b>Bono de Bienvenida</b> y la membresía <b>VITALICIA</b> al realizar tu primer depósito (desde $5 USD).\n\n` +
-    `Todo tu saldo queda 100% para ti para operar y retirar cuando quieras. ¡No te quedes operando solo en saldo ficticio mientras el mercado da oportunidades todos los días! 📈\n\n` +
+    `¡Hola de nuevo, ${nome}! Te escribo directo porque tu prueba Demo de 3 días para el ID <code>${brokerId}</code> está por concluir 🎯`,
+    `Recuerda que con tu primer depósito (desde $5 USD) desbloqueas de inmediato <b>2 MESES COMPLETOS (60 Días)</b> de membresía VIP Real para operar en saldo real y retirar todas tus ganancias.\n\n` +
+    `Todo tu saldo queda 100% para ti para operar y retirar cuando quieras. ¡No dejes pasar la oportunidad de multiplicar tu propio capital! 📈\n\n` +
     `Si necesitas cualquier ayuda para fondear tu cuenta, estoy por acá para asistirte.`
   ],
 
@@ -434,7 +435,7 @@ export const mensagens = {
   // Compatibilidad con llamadas legacy
   followUpSemDeposito1: (nome, brokerId) => [
     `¡Hola, ${nome}! ¿Pudiste probar tus señales en Demo o entrar a la sección de depósitos? 😊`,
-    `Te recuerdo que no necesitas poner mucho para operar en real: con <b>cualquier valor</b> (desde $5 USD) ya se te desbloquea la membresía de forma <b>VITALICIA</b> en <b>STATUS VIP REAL</b> 🎯`,
+    `Te recuerdo que no necesitas poner mucho para operar en real: con <b>cualquier valor</b> (desde $5 USD) ya se te desbloquea la membresía de forma <b>VITALICIA</b> o tus <b>2 MESES COMPLETOS (60 DÍAS)</b> en <b>STATUS VIP REAL</b> 🎯`,
     `Además, la acreditación es <i>instantánea</i> por métodos locales (Pix, tarjeta, cripto o transferencia según tu país).\n\n` +
     `¿Tuviste alguna duda o quieres que te ayude a completarlo?`
   ],
@@ -445,7 +446,7 @@ export const mensagens = {
   ],
   followUpSemDeposito2: (nome, brokerId) => [
     `¡Hola de nuevo, ${nome}! Te escribo directo porque tengo tu plaza reservada en el sistema con el ID <code>${brokerId}</code> 🔒`,
-    `Apenas fondees tu cuenta con cualquier monto mínimo, tu saldo queda 100% para ti y la herramienta te queda <b>activada de por vida en Modo Real</b> 🚀`,
+    `Apenas fondees tu cuenta con cualquier monto mínimo, tu saldo queda 100% para ti y la herramienta te queda <b>activada por 2 Meses (60 Días) en Modo Real</b> 🚀`,
     `¿Tienes alguna duda o quieres que te ayude a fondear para que arranques hoy mismo?`
   ],
   botoesFollowUpSemDeposito2: [

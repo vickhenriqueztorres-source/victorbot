@@ -141,10 +141,11 @@ test('Funil em 2 Etapas: Mensagens de ativação Demo e Upgrade VIP Real estão 
   assert.ok(libDemo.some(m => m.includes('849302')));
   assert.ok(libDemo.some(m => m.includes('Infiltrus')));
 
-  // 2. Chave Demo com plano DEMO VIP
-  const licDemo = mensagens.entregaLicencaDemo('Carlos', 'IFX-TEST.SIG', 3650, 'DEMO VIP');
+  // 2. Chave Demo com plano DEMO VIP (3 dias)
+  const licDemo = mensagens.entregaLicencaDemo('Carlos', 'IFX-TEST.SIG', 3, 'DEMO VIP');
   assert.ok(licDemo.includes('IFX-TEST.SIG'));
   assert.ok(licDemo.includes('DEMO VIP'));
+  assert.ok(licDemo.includes('3 DÍAS DE PRUEBA'));
 
   // 3. Desafio Demo de 2 a 3 sinais
   const desafio = mensagens.desafioDemo();
@@ -152,10 +153,11 @@ test('Funil em 2 Etapas: Mensagens de ativação Demo e Upgrade VIP Real estão 
   assert.ok(desafio.includes('2 a 3 señales'));
   assert.ok(mensagens.botoesEntregaDemo.length >= 2);
 
-  // 4. Upgrade VIP Real
-  const upReal = mensagens.entregaLicencaVipReal('Carlos', 'IFX-VIP.SIG');
+  // 4. Upgrade VIP Real (2 meses / 60 dias)
+  const upReal = mensagens.entregaLicencaVipReal('Carlos', 'IFX-VIP.SIG', 60);
   assert.ok(upReal.includes('IFX-VIP.SIG'));
-  assert.ok(upReal.includes('VITALICIO REAL'));
+  assert.ok(upReal.includes('VIP REAL'));
+  assert.ok(upReal.includes('2 MESES DE ACCESO VIP'));
 
   // 5. Follow-ups do pipeline Demo em 4 etapas
   const fuDemo1 = mensagens.followUpDemoInstalacao('Carlos');
