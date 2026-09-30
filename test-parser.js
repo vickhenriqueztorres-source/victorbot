@@ -133,3 +133,82 @@ test('Copywriting Mensagens: Central de FAQ e objeções responde com clareza em
   assert.ok(Array.isArray(dudaRet));
   assert.ok(dudaRet.some(m => m.includes('100% seguro')));
 });
+
+test('Funil em 2 Etapas: Mensagens de ativação Demo e Upgrade VIP Real estão perfeitas', () => {
+  // 1. Confirmação e Liberação Demo Imediata (Risco Zero)
+  const libDemo = mensagens.confirmacaoIdLiberacaoDemo('Carlos', '849302');
+  assert.ok(Array.isArray(libDemo));
+  assert.ok(libDemo.some(m => m.includes('849302')));
+  assert.ok(libDemo.some(m => m.includes('Infiltrus')));
+
+  // 2. Chave Demo com plano DEMO VIP
+  const licDemo = mensagens.entregaLicencaDemo('Carlos', 'IFX-TEST.SIG', 3650, 'DEMO VIP');
+  assert.ok(licDemo.includes('IFX-TEST.SIG'));
+  assert.ok(licDemo.includes('DEMO VIP'));
+
+  // 3. Desafio Demo de 2 a 3 sinais
+  const desafio = mensagens.desafioDemo();
+  assert.ok(desafio.includes('Cuenta DEMO'));
+  assert.ok(desafio.includes('2 a 3 señales'));
+  assert.ok(mensagens.botoesEntregaDemo.length >= 2);
+
+  // 4. Upgrade VIP Real
+  const upReal = mensagens.entregaLicencaVipReal('Carlos', 'IFX-VIP.SIG');
+  assert.ok(upReal.includes('IFX-VIP.SIG'));
+  assert.ok(upReal.includes('VITALICIO REAL'));
+
+  // 5. Follow-ups do pipeline Demo em 4 etapas
+  const fuDemo1 = mensagens.followUpDemoInstalacao('Carlos');
+  assert.ok(fuDemo1.some(m => m.includes('instalación')));
+  assert.ok(mensagens.botoesFollowUpDemoInstalacao.length >= 2);
+
+  const fuDemo2 = mensagens.followUpDemoTeste('Carlos');
+  assert.ok(fuDemo2.some(m => m.includes('3 victorias')));
+  assert.ok(mensagens.botoesFollowUpDemoTeste.length >= 2);
+
+  const fuDemo3 = mensagens.followUpDemoConversaoReal('Carlos', '849302');
+  assert.ok(fuDemo3.some(m => m.includes('$5 USD')));
+  assert.ok(mensagens.botoesFollowUpDemoConversaoReal.length >= 2);
+
+  const fuDemo4 = mensagens.followUpDemoUltimoLlamado('Carlos', '849302');
+  assert.ok(fuDemo4.some(m => m.includes('849302')));
+  assert.ok(mensagens.botoesFollowUpDemoUltimoLlamado.length >= 2);
+});
+
+test('Database: Gerenciamento dos estados DEMO_ACTIVE e VIP_REAL', () => {
+  const fakeChatId = '888777666';
+  const fakeBrokerId = '771122';
+
+  // 1. Cadastra como DEMO_ACTIVE
+  db.saveUser(fakeChatId, {
+    firstName: 'Elena',
+    brokerId: fakeBrokerId,
+    status: 'DEMO_ACTIVE',
+    licensePlan: 'DEMO VIP',
+    followUps: {
+      demo_1: new Date().toISOString()
+    }
+  });
+
+  const demoUser = db.getUser(fakeChatId);
+  assert.equal(demoUser.status, 'DEMO_ACTIVE');
+  assert.equal(demoUser.licensePlan, 'DEMO VIP');
+  assert.ok(demoUser.followUps.demo_1);
+
+  // 2. Faz upgrade para VIP_REAL
+  db.saveUser(fakeChatId, {
+    status: 'VIP_REAL',
+    licensePlan: 'VITALICIO VIP',
+    upgradedToRealAt: new Date().toISOString()
+  });
+
+  const vipUser = db.getUser(fakeChatId);
+  assert.equal(vipUser.status, 'VIP_REAL');
+  assert.equal(vipUser.licensePlan, 'VITALICIO VIP');
+  assert.ok(vipUser.upgradedToRealAt);
+
+  // Limpa o registro de teste
+  delete db.data.users[fakeChatId];
+  delete db.data.brokerToChat[fakeBrokerId];
+  db.saveSync();
+});

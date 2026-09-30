@@ -78,19 +78,23 @@ async function sendHumanMessage(chatId, textOrArray, options = {}, delayMs = con
 }
 
 /**
- * Libera o acesso VIP do cliente: gera chave criptográfica ECDSA e envia o ZIP da extensão
+ * Libera o acesso do cliente ao software Infiltrus:
+ * - Se plan === 'DEMO VIP': entrega imediata sem atrito para testar na conta demo com saldo fictício.
+ * - Se plan === 'VITALICIO VIP' ou 'VITALICIO': entrega credencial real após depósito.
  */
-async function deliverAccessToUser(chatId, clientName, brokerId) {
+async function deliverAccessToUser(chatId, clientName, brokerId, plan = 'DEMO VIP') {
   const name = clientName || 'Trader';
-  console.log(`[LIBERAÇÃO] Iniciando liberação para ${name} (ID Corretora: ${brokerId}, Chat: ${chatId})`);
+  const isRealVip = plan === 'VITALICIO VIP' || plan === 'VITALICIO';
+  console.log(`[LIBERAÇÃO] Iniciando entrega (${plan}) para ${name} (ID Corretora: ${brokerId}, Chat: ${chatId})`);
 
-  await sendHumanMessage(chatId, mensagens.gerandoChave(), {}, 2000);
+  // Mensagem inicial humanizada simulando processamento criptográfico
+  await sendHumanMessage(chatId, isRealVip ? mensagens.gerandoChave() : mensagens.gerandoChaveDemo(), {}, 1800);
 
-  // 1. Gera a licença oficial assinada com a chave privada ECDSA P-256 (Vigência Vitalícia)
+  // 1. Gera a licença oficial assinada com a chave privada ECDSA P-256
   const license = await issueClientLicense({
     holder: `${name} (${brokerId})`,
     durationDays: config.licenseDays || 3650,
-    plan: 'VITALICIO'
+    plan: plan
   });
 
   // 2. Salva no banco de dados local
@@ -105,15 +109,20 @@ async function deliverAccessToUser(chatId, clientName, brokerId) {
   });
 
   db.saveUser(chatId, {
-    status: 'ACTIVE',
+    status: isRealVip ? 'VIP_REAL' : 'DEMO_ACTIVE',
+    brokerId,
     licenseCode: license.code,
+    licensePlan: license.plan,
     activatedAt: new Date().toISOString(),
+    demoActivatedAt: isRealVip ? undefined : new Date().toISOString(),
     lastInteractionAt: new Date().toISOString()
   });
 
   // 3. Envia a chave de acesso formatada em bloco copiável
-  await simulateTyping(chatId, 2500);
-  const licenseMsg = mensagens.entregaLicenca(name, license.code, license.durationDays, license.plan);
+  await simulateTyping(chatId, 2200);
+  const licenseMsg = isRealVip
+    ? mensagens.entregaLicenca(name, license.code, license.durationDays, license.plan)
+    : mensagens.entregaLicencaDemo(name, license.code, license.durationDays, license.plan);
   await api.sendMessage(chatId, licenseMsg);
 
   // 4. Envia o arquivo ZIP da extensão se existir
@@ -130,11 +139,58 @@ async function deliverAccessToUser(chatId, clientName, brokerId) {
     }
   }
 
-  // 5. Envia o tutorial passo a passo de instalação
-  await simulateTyping(chatId, 2200);
+  // 5. Envia o tutorial passo a passo de instalação no Chrome
+  await simulateTyping(chatId, 2000);
   const guideMsg = mensagens.guiaInstalacao();
   await api.sendMessage(chatId, guideMsg);
-  console.log(`[SUCESSO] Acesso entregue com sucesso para ${name} (ID: ${brokerId})`);
+
+  // 6. Se for ativação DEMO, envia o Desafio Demo de 2 a 3 sinais com botões interativos
+  if (!isRealVip) {
+    await simulateTyping(chatId, 2000);
+    const desafioMsg = mensagens.desafioDemo();
+    const keyboard = { inline_keyboard: mensagens.botoesEntregaDemo };
+    await api.sendMessage(chatId, desafioMsg, { reply_markup: keyboard });
+  }
+
+  console.log(`[SUCESSO] Acesso (${plan}) entregue com sucesso para ${name} (ID: ${brokerId})`);
+}
+
+/**
+ * Realiza o upgrade proativo do usuário para VIP REAL VITALÍCIO quando o depósito é confirmado
+ */
+async function upgradeToRealVip(chatId, clientName, brokerId, amount = 'confirmado') {
+  const name = clientName || 'Trader';
+  console.log(`[UPGRADE VIP] Emitindo credencial VIP Real para ${name} (ID: ${brokerId})`);
+
+  // Emite licença com o plano oficial VITALICIO VIP
+  const license = await issueClientLicense({
+    holder: `${name} (${brokerId})`,
+    durationDays: 3650,
+    plan: 'VITALICIO VIP'
+  });
+
+  db.recordLicense({
+    brokerId,
+    chatId,
+    code: license.code,
+    holder: license.holder,
+    plan: license.plan,
+    durationDays: license.durationDays,
+    expiresAtIso: license.expiresAtIso
+  });
+
+  db.saveUser(chatId, {
+    status: 'VIP_REAL',
+    licenseCode: license.code,
+    licensePlan: license.plan,
+    upgradedToRealAt: new Date().toISOString(),
+    lastInteractionAt: new Date().toISOString()
+  });
+
+  await simulateTyping(chatId, 2000);
+  const vipMsg = mensagens.entregaLicencaVipReal(name, license.code);
+  await api.sendMessage(chatId, vipMsg);
+  console.log(`[SUCESSO] Upgrade VIP Real entregue para ${name} (ID: ${brokerId})`);
 }
 
 /**
@@ -152,10 +208,10 @@ async function handleChannelPost(channelMsg) {
   // Se for um evento de depósito com ID detectado
   if (parsed.type === 'DEPOSITO' && parsed.brokerId) {
     const user = db.findUserByBrokerId(parsed.brokerId);
-    if (user && user.status === 'WAITING_DEPOSIT') {
-      console.log(`[GATILHO PROATIVO] Usuário encontrado aguardando depósito: Chat ${user.chatId} (${user.firstName})`);
-      
-      // Notifica proativamente o usuário
+    if (user && user.status !== 'VIP_REAL') {
+      console.log(`[GATILHO PROATIVO UPGRADE] Usuário encontrado para upgrade VIP Real: Chat ${user.chatId} (${user.firstName})`);
+
+      // Notifica proativamente o usuário comemorando a confirmação do depósito
       await sendHumanMessage(
         user.chatId,
         mensagens.depositoDetectadoProativo(user.firstName || 'amigo(a)', parsed.amount || 'confirmado'),
@@ -163,8 +219,8 @@ async function handleChannelPost(channelMsg) {
         1500
       );
 
-      // Libera acesso
-      await deliverAccessToUser(user.chatId, user.firstName, parsed.brokerId);
+      // Emite credencial VIP Real Vitalícia
+      await upgradeToRealVip(user.chatId, user.firstName, parsed.brokerId, parsed.amount);
       eventRecord.isHandled = true;
       db.saveSync();
     }
@@ -193,38 +249,49 @@ async function handlePrivateMessage(msg) {
 
     if (cmd === '/admin' || cmd === '/status') {
       const stats = db.getStats();
-      const totalFu = (stats.followUpsSent?.noId_1 || 0) + (stats.followUpsSent?.noId_2 || 0) + (stats.followUpsSent?.noDeposit_1 || 0) + (stats.followUpsSent?.noDeposit_2 || 0);
+      const totalFu = (stats.followUpsSent?.noId_1 || 0) + (stats.followUpsSent?.noId_2 || 0) + (stats.followUpsSent?.demo_1 || 0) + (stats.followUpsSent?.demo_2 || 0) + (stats.followUpsSent?.demo_3 || 0) + (stats.followUpsSent?.demo_4 || 0);
 
       const report =
         `📊 <b>PAINEL DO ADMINISTRADOR</b>\n\n` +
         `👥 <b>Total de Leads no Bot:</b> ${stats.totalUsers}\n` +
-        `⏳ <b>Aguardando Depósito:</b> ${stats.waitingDeposit}\n` +
+        `⏳ <b>Aguardando Envio de ID:</b> ${stats.withoutId || 0}\n` +
+        `🎯 <b>Em Fase de Teste Demo:</b> ${stats.demoUsers || 0}\n` +
+        `👑 <b>VIP Real Vitalício (Depositados):</b> ${stats.vipRealUsers || 0}\n` +
         `🔑 <b>Licenças Emitidas:</b> ${stats.activeLicenses}\n` +
         `📢 <b>Eventos do Canal:</b> ${stats.totalEvents} (${stats.depositEvents} depósitos / ${stats.signupEvents} cadastros)\n` +
-        `📬 <b>Follow-ups Enviados:</b> ${totalFu} (Sem ID 1: ${stats.followUpsSent?.noId_1 || 0} | Sem ID 2: ${stats.followUpsSent?.noId_2 || 0} | Dep 1: ${stats.followUpsSent?.noDeposit_1 || 0} | Dep 2: ${stats.followUpsSent?.noDeposit_2 || 0})\n\n` +
+        `📬 <b>Follow-ups Enviados:</b> ${totalFu}\n` +
+        `  • Sem ID 1: ${stats.followUpsSent?.noId_1 || 0} | Sem ID 2: ${stats.followUpsSent?.noId_2 || 0}\n` +
+        `  • Demo 1 (Instalação): ${stats.followUpsSent?.demo_1 || 0}\n` +
+        `  • Demo 2 (Validação Sinais): ${stats.followUpsSent?.demo_2 || 0}\n` +
+        `  • Demo 3 (Ponte Real $5): ${stats.followUpsSent?.demo_3 || 0}\n` +
+        `  • Demo 4 (Último Chamado): ${stats.followUpsSent?.demo_4 || 0}\n\n` +
         `<i>Comandos disponíveis:</i>\n` +
-        `• <code>/liberar &lt;ID_CORRETORA&gt;</code> - Força liberação manual\n` +
-        `• <code>/followup</code> - Pipeline de leads para follow-up\n` +
-        `• <code>/disparar_followup &lt;CHAT_ID&gt; &lt;1|2|3|4&gt;</code> - Dispara follow-up teste\n` +
+        `• <code>/liberar &lt;ID_CORRETORA&gt; [demo|real]</code> - Força liberação manual\n` +
+        `• <code>/followup</code> - Pipeline do funil em 2 etapas\n` +
+        `• <code>/disparar_followup &lt;CHAT_ID&gt; &lt;1-6&gt;</code> - Dispara follow-up teste\n` +
         `• <code>/simular &lt;TEXTO_DO_CANAL&gt;</code> - Testa notificação do canal`;
       return api.sendMessage(chatId, report);
     }
 
     if (cmd === '/followup' && isAdmin) {
       const users = Object.values(db.data.users);
-      const awaitingId = users.filter(u => !u.brokerId && u.status !== 'ACTIVE');
-      const awaitingDep = users.filter(u => u.brokerId && u.status === 'WAITING_DEPOSIT');
+      const awaitingId = users.filter(u => !u.brokerId && u.status !== 'VIP_REAL');
+      const demoActive = users.filter(u => u.brokerId && (u.status === 'DEMO_ACTIVE' || u.status === 'WAITING_DEPOSIT'));
+      const vipReal = users.filter(u => u.status === 'VIP_REAL' || u.status === 'ACTIVE');
 
       const msg =
-        `📋 <b>PIPELINE DE FOLLOW-UP E RECUPERAÇÃO</b>\n\n` +
+        `📋 <b>PIPELINE DO FUNIL EM 2 ETAPAS</b>\n\n` +
         `⏳ <b>Aguardando Envio de ID:</b> ${awaitingId.length} leads\n` +
-        `💳 <b>Aguardando Primeiro Depósito:</b> ${awaitingDep.length} leads\n\n` +
+        `🎯 <b>Em Fase de Teste Demo:</b> ${demoActive.length} leads\n` +
+        `👑 <b>VIP Real Vitalício (FTD):</b> ${vipReal.length} clientes\n\n` +
         `<i>Para testar o disparo de mensagens para qualquer chat:</i>\n` +
-        `<code>/disparar_followup &lt;CHAT_ID&gt; &lt;1|2|3|4&gt;</code>\n\n` +
+        `<code>/disparar_followup &lt;CHAT_ID&gt; &lt;1|2|3|4|5|6&gt;</code>\n\n` +
         `1 = Sem ID 1 (Check-in amigável)\n` +
         `2 = Sem ID 2 (Prova social e FOMO)\n` +
-        `3 = Sem Depósito 1 (Acesso vitalício e métodos)\n` +
-        `4 = Sem Depósito 2 (Reserva de plaza VIP)`;
+        `3 = Demo 1 (Check-in de Instalação no Chrome)\n` +
+        `4 = Demo 2 (Desafio & Validação Sinais M1)\n` +
+        `5 = Demo 3 (Ponte Real / Depósito $5 USD)\n` +
+        `6 = Demo 4 (Último Chamado / Reserva VIP)`;
       return api.sendMessage(chatId, msg);
     }
 
@@ -246,29 +313,39 @@ async function handlePrivateMessage(msg) {
         await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpSemId2(config.brokerAffiliateUrl) } });
         return api.sendMessage(chatId, `✅ Follow-up 2 (Sem ID - Prova Social) disparado para ${name}!`);
       } else if (typeNum === '3') {
-        const text = mensagens.followUpSemDeposito1(name, brokerId);
-        await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpSemDeposito1 } });
-        return api.sendMessage(chatId, `✅ Follow-up 1 (Sem Depósito) disparado para ${name}!`);
+        const text = mensagens.followUpDemoInstalacao(name);
+        await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpDemoInstalacao } });
+        return api.sendMessage(chatId, `✅ Follow-up Demo 1 (Instalação) disparado para ${name}!`);
       } else if (typeNum === '4') {
-        const text = mensagens.followUpSemDeposito2(name, brokerId);
-        await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpSemDeposito2 } });
-        return api.sendMessage(chatId, `✅ Follow-up 2 (Sem Depósito - Reserva VIP) disparado para ${name}!`);
+        const text = mensagens.followUpDemoTeste(name);
+        await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpDemoTeste } });
+        return api.sendMessage(chatId, `✅ Follow-up Demo 2 (Validação Sinais) disparado para ${name}!`);
+      } else if (typeNum === '5') {
+        const text = mensagens.followUpDemoConversaoReal(name, brokerId);
+        await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpDemoConversaoReal } });
+        return api.sendMessage(chatId, `✅ Follow-up Demo 3 (Ponte Real $5 USD) disparado para ${name}!`);
+      } else if (typeNum === '6') {
+        const text = mensagens.followUpDemoUltimoLlamado(name, brokerId);
+        await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpDemoUltimoLlamado } });
+        return api.sendMessage(chatId, `✅ Follow-up Demo 4 (Último Chamado) disparado para ${name}!`);
       } else {
-        return api.sendMessage(chatId, 'Uso correto: <code>/disparar_followup &lt;CHAT_ID&gt; &lt;1|2|3|4&gt;</code>');
+        return api.sendMessage(chatId, 'Uso correto: <code>/disparar_followup &lt;CHAT_ID&gt; &lt;1|2|3|4|5|6&gt;</code>');
       }
     }
 
     if (cmd === '/liberar' && isAdmin) {
       if (!arg) {
-        return api.sendMessage(chatId, 'Uso: <code>/liberar &lt;ID_DA_CORRETORA&gt;</code>');
+        return api.sendMessage(chatId, 'Uso: <code>/liberar &lt;ID_DA_CORRETORA&gt; [demo|real]</code>');
       }
-      const targetUser = db.findUserByBrokerId(arg) || db.getUser(arg);
+      const [targetId, mode] = arg.split(' ');
+      const targetUser = db.findUserByBrokerId(targetId) || db.getUser(targetId);
       if (!targetUser) {
-        return api.sendMessage(chatId, `❌ Nenhum usuário com o ID ou Chat <code>${arg}</code> foi encontrado.`);
+        return api.sendMessage(chatId, `❌ Nenhum usuário com o ID ou Chat <code>${targetId}</code> foi encontrado.`);
       }
-      await api.sendMessage(chatId, `⚡ Forçando liberação manual para ${targetUser.firstName} (ID: ${arg})...`);
-      await deliverAccessToUser(targetUser.chatId, targetUser.firstName, arg);
-      return api.sendMessage(chatId, `✅ Liberação concluída com sucesso!`);
+      const plan = (mode && mode.toLowerCase() === 'demo') ? 'DEMO VIP' : 'VITALICIO VIP';
+      await api.sendMessage(chatId, `⚡ Forçando liberação manual (${plan}) para ${targetUser.firstName} (ID: ${targetId})...`);
+      await deliverAccessToUser(targetUser.chatId, targetUser.firstName, targetId, plan);
+      return api.sendMessage(chatId, `✅ Liberação (${plan}) concluída com sucesso!`);
     }
 
     if (cmd === '/simular' && isAdmin) {
@@ -302,15 +379,14 @@ async function handlePrivateMessage(msg) {
     return sendHumanMessage(chatId, welcome, { reply_markup: keyboard });
   }
 
-  // 3. FLUXO DE VERIFICAÇÃO DE ID DA CORRETORA
+  // 3. FLUXO DE VERIFICAÇÃO DE ID DA CORRETORA (MODELO EM 2 ETAPAS)
   // Tenta extrair o ID numérico digitado pelo cliente (ex: "meu id é 849302" ou "849302")
   const idMatch = text.match(/\b([0-9]{4,12})\b/);
   if (idMatch) {
     const brokerId = idMatch[1];
     db.saveUser(chatId, {
       brokerId,
-      step: 'CHECKING_ID',
-      waitingDepositSince: new Date().toISOString()
+      step: 'CHECKING_ID'
     });
 
     await sendHumanMessage(chatId, mensagens.consultandoSistema(brokerId), {}, 1600);
@@ -319,24 +395,23 @@ async function handlePrivateMessage(msg) {
     const hasDeposit = db.hasDeposit(brokerId);
 
     if (hasDeposit) {
-      // Cliente já depositou -> Comemora confirmação de depósito e entrega acesso VIP imediatamente!
+      // Cliente já depositou -> Comemora confirmação de depósito e entrega acesso VIP Real imediatamente!
       const depositEvent = db.data.channelEvents.find(e => e.type === 'DEPOSITO' && String(e.brokerId).trim() === brokerId);
       const amountStr = depositEvent?.amount ? ` de ${depositEvent.amount}` : '';
       await sendHumanMessage(
         chatId,
         `¡Encontré tu depósito${amountStr} confirmado perfectamente con el ID <code>${brokerId}</code>, ${firstName}! 👏🎉\n\n` +
-        `¡Tu cuenta ya está 100% activa en el broker!`,
+        `¡Tu cuenta ya está 100% activa en el broker con Status VIP Real!`,
         {},
         1600
       );
-      return deliverAccessToUser(chatId, firstName, brokerId);
+      return deliverAccessToUser(chatId, firstName, brokerId, 'VITALICIO VIP');
     }
 
-    // Cliente informou o ID -> Confirma registro com entusiasmo e instrui ativação Vitalícia
-    db.saveUser(chatId, { status: 'WAITING_DEPOSIT' });
-    const waitingMsg = mensagens.aguardandoDeposito(firstName, brokerId);
-    const keyboard = { inline_keyboard: mensagens.botoesAguardandoDeposito };
-    return sendHumanMessage(chatId, waitingMsg, { reply_markup: keyboard }, 2000);
+    // Cliente informou o ID -> MODELO DE ATIVAÇÃO EM 2 ETAPAS:
+    // Não bloqueia! Confirma registro com entusiasmo e libera IMEDIATAMENTE a ferramenta para teste Demo!
+    await sendHumanMessage(chatId, mensagens.confirmacaoIdLiberacaoDemo(firstName, brokerId), {}, 1600);
+    return deliverAccessToUser(chatId, firstName, brokerId, 'DEMO VIP');
   }
 
   // 4. DETECÇÃO INTELIGENTE DE DÚVIDAS E OBJEÇÕES (PALAVRAS-CHAVE)
@@ -516,7 +591,15 @@ async function handleCallbackQuery(query) {
 
     const hasDeposit = db.hasDeposit(user.brokerId);
     if (hasDeposit) {
-      return deliverAccessToUser(chatId, firstName, user.brokerId);
+      const depositEvent = db.data.channelEvents.find(e => e.type === 'DEPOSITO' && String(e.brokerId).trim() === String(user.brokerId).trim());
+      const amount = depositEvent?.amount || 'confirmado';
+      await sendHumanMessage(
+        chatId,
+        mensagens.depositoDetectadoProativo(firstName, amount),
+        {},
+        1500
+      );
+      return upgradeToRealVip(chatId, firstName, user.brokerId, amount);
     }
 
     const pendingMsg = mensagens.depositoAindaNaoConsta(firstName, user.brokerId);
@@ -529,11 +612,66 @@ async function handleCallbackQuery(query) {
     };
     return sendHumanMessage(chatId, pendingMsg, { reply_markup: keyboard }, 1800);
   }
+
+  // --- CALLBACKS DO FUNIL EM 2 ETAPAS (DEMO ➔ REAL) ---
+  if (data === 'faq_como_real') {
+    const msg = mensagens.dudaComoReal(firstName);
+    const keyboard = { inline_keyboard: mensagens.botoesDudaComoReal };
+    return sendHumanMessage(chatId, msg, { reply_markup: keyboard }, 1600);
+  }
+
+  if (data === 'faq_instalar') {
+    const msg = mensagens.dudaInstalacion();
+    const keyboard = {
+      inline_keyboard: [
+        [{ text: '✅ Ya la tengo instalada', callback_data: 'demo_instalada' }],
+        [{ text: '💳 Activar Cuenta Real ($5 USD)', callback_data: 'faq_como_real' }],
+        [{ text: '⬅️ Volver', callback_data: 'menu_dudas' }]
+      ]
+    };
+    return sendHumanMessage(chatId, msg, { reply_markup: keyboard }, 1600);
+  }
+
+  if (data === 'demo_instalada') {
+    const msg = mensagens.respostaDemoInstalada(firstName);
+    const keyboard = {
+      inline_keyboard: [
+        [{ text: '🎯 Ya la probé en Demo', callback_data: 'demo_probada' }],
+        [{ text: '💳 Pasar a Cuenta Real ($5 USD)', callback_data: 'faq_como_real' }]
+      ]
+    };
+    return sendHumanMessage(chatId, msg, { reply_markup: keyboard }, 1600);
+  }
+
+  if (data === 'demo_probada') {
+    const msg = mensagens.respostaDemoProbada(firstName);
+    const keyboard = {
+      inline_keyboard: [
+        [{ text: '💳 Activar Cuenta Real ($5 USD)', callback_data: 'faq_como_real' }],
+        [{ text: '💵 ¿Cuál es el monto mínimo?', callback_data: 'faq_minimo' }],
+        [{ text: '🔄 Ya deposité (Verificar)', callback_data: 'check_deposit_now' }]
+      ]
+    };
+    return sendHumanMessage(chatId, msg, { reply_markup: keyboard }, 1600);
+  }
+
+  if (data === 'demo_tarde') {
+    const msg = mensagens.respostaDemoTarde(firstName);
+    const keyboard = {
+      inline_keyboard: [
+        [{ text: '📖 Ver guía de instalación', callback_data: 'faq_instalar' }],
+        [{ text: '❓ Tengo una duda', callback_data: 'menu_dudas' }]
+      ]
+    };
+    return sendHumanMessage(chatId, msg, { reply_markup: keyboard }, 1600);
+  }
 }
 
 /**
- * Motor autônomo de Follow-Up Estratégico
- * Executa periodicamente sem travar o bot e recupera leads frios ou indecisos.
+ * Motor autônomo de Follow-Up Estratégico (Funil em 2 Etapas)
+ * Executa periodicamente sem travar o bot e recupera leads em todas as fases:
+ * - Leads sem ID: estímulo de cadastro e prova social.
+ * - Leads com Demo ativa: suporte de instalação, validação de sinais e ponte para Conta Real ($5 USD).
  */
 async function checkAndSendFollowUps() {
   try {
@@ -543,8 +681,8 @@ async function checkAndSendFollowUps() {
 
     for (const user of Object.values(db.data.users)) {
       try {
-        // 1. Clientes com licença ativa já compraram, não recebem follow-up
-        if (user.status === 'ACTIVE' || user.licenseCode) continue;
+        // 1. Clientes com status VIP Real já depositaram, não recebem follow-up
+        if (user.status === 'VIP_REAL' || (user.licensePlan === 'VITALICIO VIP' && db.hasDeposit(user.brokerId))) continue;
 
         const userChatId = user.chatId;
         if (!userChatId) continue;
@@ -587,35 +725,79 @@ async function checkAndSendFollowUps() {
           }
         }
 
-        // CASO B: Lead enviou ID mas ainda não depositou
-        if (user.brokerId && user.status === 'WAITING_DEPOSIT') {
-          if (db.hasDeposit(user.brokerId)) continue;
+        // CASO B: Lead recebeu a ferramenta (DEMO_ACTIVE) e ainda não realizou o depósito na Conta Real
+        if (user.brokerId && (user.status === 'DEMO_ACTIVE' || user.status === 'WAITING_DEPOSIT')) {
+          if (db.hasDeposit(user.brokerId)) {
+            // Se já tem depósito no canal, realiza o upgrade VIP Real imediatamente
+            const depositEvent = db.data.channelEvents.find(e => e.type === 'DEPOSITO' && String(e.brokerId).trim() === String(user.brokerId).trim());
+            const amount = depositEvent?.amount || 'confirmado';
+            await sendHumanMessage(
+              userChatId,
+              mensagens.depositoDetectadoProativo(user.firstName || 'amigo(a)', amount),
+              {},
+              1500
+            );
+            await upgradeToRealVip(userChatId, user.firstName, user.brokerId, amount);
+            continue;
+          }
 
-          const waitingSince = new Date(user.waitingDepositSince || user.updatedAt || lastInteraction).getTime();
-          const waitingTimeMs = now - waitingSince;
+          const demoActiveSince = new Date(user.demoActivatedAt || user.activatedAt || user.waitingDepositSince || user.createdAt || lastInteraction).getTime();
+          const demoTimeMs = now - demoActiveSince;
 
-          // Follow-up B1: Entre 45 min e 24h aguardando depósito
-          if (waitingTimeMs >= 45 * MS_IN_MINUTE && waitingTimeMs < 24 * MS_IN_HOUR && !user.followUps.noDeposit_1) {
-            console.log(`[FOLLOW-UP] Enviando Follow-up 1 (Aguardando Depósito) para ${user.firstName} (ID: ${user.brokerId})`);
-            user.followUps.noDeposit_1 = new Date().toISOString();
+          // Follow-up B1 (Instalação): Entre 45 min e 24h
+          if (demoTimeMs >= 45 * MS_IN_MINUTE && demoTimeMs < 24 * MS_IN_HOUR && !user.followUps.demo_1 && !user.followUps.noDeposit_1) {
+            console.log(`[FOLLOW-UP] Enviando Follow-up Demo 1 (Instalação) para ${user.firstName} (ID: ${user.brokerId})`);
+            user.followUps.demo_1 = new Date().toISOString();
             db.saveUser(userChatId, { followUps: user.followUps });
 
-            const text = mensagens.followUpSemDeposito1(user.firstName || 'amigo', user.brokerId);
-            const keyboard = { inline_keyboard: mensagens.botoesFollowUpSemDeposito1 };
+            const text = mensagens.followUpDemoInstalacao(user.firstName || 'amigo');
+            const keyboard = { inline_keyboard: mensagens.botoesFollowUpDemoInstalacao };
             await sendHumanMessage(userChatId, text, { reply_markup: keyboard });
             continue;
           }
 
-          // Follow-up B2: 6h após Follow-up B1 e menos de 48h (Reserva de Plaza VIP)
-          if (user.followUps.noDeposit_1 && !user.followUps.noDeposit_2) {
-            const timeSinceFu1 = now - new Date(user.followUps.noDeposit_1).getTime();
-            if (timeSinceFu1 >= 6 * MS_IN_HOUR && (now - createdAt) < 48 * MS_IN_HOUR) {
-              console.log(`[FOLLOW-UP] Enviando Follow-up 2 (Aguardando Depósito - Escassez) para ${user.firstName} (ID: ${user.brokerId})`);
-              user.followUps.noDeposit_2 = new Date().toISOString();
+          // Follow-up B2 (Validação Sinais Demo): 3h após Follow-up B1
+          const lastFu1 = user.followUps.demo_1 || user.followUps.noDeposit_1;
+          if (lastFu1 && !user.followUps.demo_2 && !user.followUps.noDeposit_2) {
+            const timeSinceFu1 = now - new Date(lastFu1).getTime();
+            if (timeSinceFu1 >= 3 * MS_IN_HOUR && (now - createdAt) < 48 * MS_IN_HOUR) {
+              console.log(`[FOLLOW-UP] Enviando Follow-up Demo 2 (Validação Sinais) para ${user.firstName} (ID: ${user.brokerId})`);
+              user.followUps.demo_2 = new Date().toISOString();
               db.saveUser(userChatId, { followUps: user.followUps });
 
-              const text = mensagens.followUpSemDeposito2(user.firstName || 'amigo', user.brokerId);
-              const keyboard = { inline_keyboard: mensagens.botoesFollowUpSemDeposito2 };
+              const text = mensagens.followUpDemoTeste(user.firstName || 'amigo');
+              const keyboard = { inline_keyboard: mensagens.botoesFollowUpDemoTeste };
+              await sendHumanMessage(userChatId, text, { reply_markup: keyboard });
+              continue;
+            }
+          }
+
+          // Follow-up B3 (Conversão para Conta Real / $5 USD): 12h após Follow-up B2
+          const lastFu2 = user.followUps.demo_2 || user.followUps.noDeposit_2;
+          if (lastFu2 && !user.followUps.demo_3) {
+            const timeSinceFu2 = now - new Date(lastFu2).getTime();
+            if (timeSinceFu2 >= 12 * MS_IN_HOUR && (now - createdAt) < 72 * MS_IN_HOUR) {
+              console.log(`[FOLLOW-UP] Enviando Follow-up Demo 3 (Conversão Real FTD) para ${user.firstName} (ID: ${user.brokerId})`);
+              user.followUps.demo_3 = new Date().toISOString();
+              db.saveUser(userChatId, { followUps: user.followUps });
+
+              const text = mensagens.followUpDemoConversaoReal(user.firstName || 'amigo', user.brokerId);
+              const keyboard = { inline_keyboard: mensagens.botoesFollowUpDemoConversaoReal };
+              await sendHumanMessage(userChatId, text, { reply_markup: keyboard });
+              continue;
+            }
+          }
+
+          // Follow-up B4 (Último Chamado / Bônus VIP): 24h após Follow-up B3
+          if (user.followUps.demo_3 && !user.followUps.demo_4) {
+            const timeSinceFu3 = now - new Date(user.followUps.demo_3).getTime();
+            if (timeSinceFu3 >= 24 * MS_IN_HOUR && (now - createdAt) < 96 * MS_IN_HOUR) {
+              console.log(`[FOLLOW-UP] Enviando Follow-up Demo 4 (Último Chamado) para ${user.firstName} (ID: ${user.brokerId})`);
+              user.followUps.demo_4 = new Date().toISOString();
+              db.saveUser(userChatId, { followUps: user.followUps });
+
+              const text = mensagens.followUpDemoUltimoLlamado(user.firstName || 'amigo', user.brokerId);
+              const keyboard = { inline_keyboard: mensagens.botoesFollowUpDemoUltimoLlamado };
               await sendHumanMessage(userChatId, text, { reply_markup: keyboard });
               continue;
             }

@@ -78,22 +78,35 @@ export const mensagens = {
     `¡Genial! Déjame consultar el ID <code>${brokerId}</code> aquí en mi sistema... 🔎`,
 
   // --------------------------------------------------------------------------
-  // 5. REGISTRO CONFIRMADO, FALTA EL PRIMER DEPÓSITO
+  // 5. REGISTRO CONFIRMADO & ENTREGA INMEDIATA (MODELO 2 ETAPAS - DEMO GRATUITA)
   // --------------------------------------------------------------------------
-  aguardandoDeposito: (nome, brokerId) => [
-    `¡Encontré tu registro perfectamente con el ID <code>${brokerId}</code>, ${nome}! 👏\n\n` +
-    `Ahora solo falta el último paso: la <b>activación de tu cuenta</b> mediante tu primer depósito.`,
-
-    `Depositas <b>cualquier valor</b> y el acceso a la herramienta es tuyo <b>VITALICIO</b> 🎯`,
-
-    `Apenas realices el depósito, mi sistema me avisará en automático y te enviaré de inmediato tu <b>clave VIP</b> y el archivo de la extensión 🚀\n\n` +
-    `¿Ya estás realizando el depósito o tienes alguna duda de cómo hacerlo? ¡Avísame para ayudarte! 😊`
+  confirmacaoIdLiberacaoDemo: (nome, brokerId) => [
+    `¡Encontré tu registro perfectamente con el ID <code>${brokerId}</code>, ${nome}! 👏🎯`,
+    `¡Cumpliendo exactamente lo prometido! Te acabo de desbloquear tu <b>acceso oficial a Infiltrus</b> para que lo pruebes y lo compruebes tú mismo sin pagar un solo centavo 🚀`
   ],
 
-  botoesAguardandoDeposito: [
-    [{ text: '💳 Ver métodos de pago', callback_data: 'faq_metodos' }, { text: '💵 Monto mínimo', callback_data: 'faq_minimo' }],
-    [{ text: '🔄 Ya deposité (Verificar)', callback_data: 'check_deposit_now' }],
-    [{ text: '❓ Tengo una duda', callback_data: 'menu_dudas' }]
+  gerandoChaveDemo: () =>
+    `Te estoy generando tu clave de acceso en este mismo instante, dame solo un segundito... 🔑`,
+
+  entregaLicencaDemo: (nome, codigoLicenca, dias, plano) =>
+    `¡Listo, ${nome}! Tu herramienta está <b>100% activa</b> 🚀\n\n` +
+    `🔑 <b>Tu Clave de Acceso:</b>\n` +
+    `<code>${codigoLicenca}</code>\n` +
+    `<i>(Toca la clave de arriba para copiarla al portapapeles)</i>\n\n` +
+    `💎 <b>Plan:</b> ${plano || 'DEMO VIP'} (Motor Cuántico M1 Habilitado)\n` +
+    `⏳ <b>Vigencia:</b> ACCESO INMEDIATO SIN COSTO`,
+
+  desafioDemo: () =>
+    `💡 <b>Tu primer paso recomendado (Riesgo Cero):</b>\n\n` +
+    `1️⃣ Abre tu broker en <b>Cuenta DEMO</b> (con saldo ficticio de prueba).\n` +
+    `2️⃣ Conéctale la extensión y deja que el motor matemático analice el mercado en vivo.\n` +
+    `3️⃣ Ejecuta tus primeras <b>2 a 3 señales</b> en M1 sin arriesgar ni un solo centavo de tu propio dinero.\n\n` +
+    `¡Vas a ver con tus propios ojos cómo clava las entradas! Avísame por acá en cuanto la tengas lista en pantalla para acompañarte 😊🎯`,
+
+  botoesEntregaDemo: [
+    [{ text: '📖 ¿Cómo instalar la extensión?', callback_data: 'faq_instalar' }],
+    [{ text: '💳 Activar Cuenta Real ($5 USD)', callback_data: 'faq_como_real' }],
+    [{ text: '❓ Tengo una duda / Preguntas', callback_data: 'menu_dudas' }]
   ],
 
   // --------------------------------------------------------------------------
@@ -101,8 +114,7 @@ export const mensagens = {
   // --------------------------------------------------------------------------
   idNaoEncontradoAinda: (nome, brokerId) =>
     `Mmm, todavía no me aparece el ID <code>${brokerId}</code> en mi pantalla... A veces el broker tarda 1 o 2 minutitos en sincronizar y enviar la notificación al sistema.\n\n` +
-    `Si recién te registraste o acabas de depositar, no te preocupes: en cuanto impacte aquí te mandaré mensaje al instante.\n\n` +
-    `Confírmame por favor: ¿tu ID es exactamente <code>${brokerId}</code>?`,
+    `Si recién te registraste, no te preocupes: confírmame por favor si tu ID es exactamente <code>${brokerId}</code> o pásamelo nuevamente por acá 😊`,
 
   botoesIdNaoEncontrado: [
     [{ text: '🔄 Volver a consultar ahora', callback_data: 'check_deposit_now' }],
@@ -110,31 +122,42 @@ export const mensagens = {
   ],
 
   // --------------------------------------------------------------------------
-  // 7. DISPARO PROACTIVO (El bot contacta al cliente apenas el depósito cae al canal)
+  // 7. DISPARO PROACTIVO (Celebración cuando el depósito cae al canal)
   // --------------------------------------------------------------------------
   depositoDetectadoProativo: (nome, valor) =>
-    `¡Ey, ${nome}! ¡Acaba de sonar en mi sistema que tu depósito de ${valor} fue <b>confirmado con éxito</b> en el broker! 🚀🎉`,
+    `¡¡FELICITACIONES, ${nome}!! 🎉🚀\n\n` +
+    `¡Acaba de confirmarse en el sistema tu depósito de ${valor} en el broker! 👏\n\n` +
+    `¡Tu cuenta acaba de ser ascendida oficialmente a <b>STATUS VIP REAL VITALICIO</b>! 💎`,
 
   // --------------------------------------------------------------------------
-  // 8. GENERANDO LA CLAVE VIP
+  // 8. GENERANDO LA CLAVE VIP REAL
   // --------------------------------------------------------------------------
   gerandoChave: () =>
-    `¡Excelente! Ya identifiqué la confirmación de tu depósito en la plataforma.\n\nTe estoy generando tu clave criptográfica VIP en este mismo instante, dame solo un segundito...`,
+    `¡Excelente! Ya identifiqué la confirmación de tu depósito en la plataforma.\n\nTe estoy actualizando tu clave criptográfica a VIP REAL en este mismo instante, dame solo un segundito... 💎`,
 
   // --------------------------------------------------------------------------
-  // 9. ENTREGA DE LA LICENCIA VIP OFICIAL
+  // 9. ENTREGA DE LA LICENCIA VIP OFICIAL (REAL VITALICIA)
   // --------------------------------------------------------------------------
   entregaLicenca: (nome, codigoLicenca, dias, plano) =>
-    `¡Listo, ${nome}! ¡Tu acceso está <b>100% liberado</b>! 🚀\n\n` +
-    `🔑 <b>Tu Clave de Acceso Exclusiva:</b>\n` +
+    `¡Listo, ${nome}! ¡Tu acceso VIP está <b>100% liberado</b>! 🚀\n\n` +
+    `🔑 <b>Tu Clave Oficial VIP:</b>\n` +
     `<code>${codigoLicenca}</code>\n` +
     `<i>(Solo toca la clave de arriba para copiarla al portapapeles)</i>\n\n` +
     `⏳ <b>Vigencia:</b> ACCESO VITALICIO\n` +
-    `💎 <b>Plan:</b> VITALICIO / Motor Cuántico M1 Oficial`,
+    `💎 <b>Plan:</b> VITALICIO REAL / Motor Cuántico M1 Oficial\n` +
+    `✅ <b>Estado:</b> Saldo real habilitado y ganancias 100% retirables a tu banco 📈💰`,
+
+  entregaLicencaVipReal: (nome, codigoLicenca) =>
+    `🔑 <b>Tu Nueva Clave VIP Real Vitalicia:</b>\n` +
+    `<code>${codigoLicenca}</code>\n` +
+    `<i>(Toca la clave para copiarla)</i>\n\n` +
+    `💎 <b>Plan:</b> VITALICIO REAL (Operaciones con Dinero Real)\n` +
+    `✅ <b>Estado:</b> 100% Habilitado para retirar ganancias a tu cuenta bancaria\n\n` +
+    `¡Pégala en tu extensión para actualizar tu credencial o sigue operando de una vez! ¡Vamos con todo por esos resultados en saldo real! 🎯📈`,
 
   // Leyenda adjunta al archivo .zip de la extensión
   legendaZip: () =>
-    `📦 <b>Extensión Infiltrus Signals</b> (versión cliente actualizada)\nDescarga este archivo en tu computadora para instalarla.`,
+    `📦 <b>Extensión Infiltrus Signals</b> (versión cliente actualizada)\nDescarga este archivo en tu computadora para instalarla en Chrome.`,
 
   // --------------------------------------------------------------------------
   // 10. GUÍA PASO A PASO DE INSTALACIÓN EN GOOGLE CHROME
@@ -164,13 +187,15 @@ export const mensagens = {
     `Toca cualquiera de los botones de abajo o <i>escríbeme directamente tu pregunta</i> aquí en el chat:`,
 
   botoesMenuDudas: [
+    [{ text: '🚀 ¿Cómo pasar a Cuenta Real ($5 USD)?', callback_data: 'faq_como_real' }],
+    [{ text: '📖 ¿Cómo instalar la extensión en Chrome?', callback_data: 'faq_instalar' }],
     [{ text: '💵 ¿Cuánto es el depósito mínimo?', callback_data: 'faq_minimo' }],
     [{ text: '💳 ¿Qué métodos de pago aceptan?', callback_data: 'faq_metodos' }],
     [{ text: '📱 ¿Funciona en Celular o solo en PC?', callback_data: 'faq_dispositivos' }],
     [{ text: '💎 ¿Por qué es Gratis y Vitalicio?', callback_data: 'faq_vitalicio' }],
     [{ text: '🔒 ¿Cómo retiro mis ganancias?', callback_data: 'faq_retiros' }],
     [{ text: '🆔 ¿Dónde encuentro mi ID?', callback_data: 'faq_donde_id' }],
-    [{ text: '⬅️ Volver / Quiero mi clave', callback_data: 'faq_volver' }]
+    [{ text: '⬅️ Volver / Menú principal', callback_data: 'faq_volver' }]
   ],
 
   // 12.1 Duda: Monto Mínimo
@@ -275,10 +300,53 @@ export const mensagens = {
   depositoAindaNaoConsta: (nome, brokerId) =>
     `¡Entendido, ${nome}! Consulté en mi sistema y todavía no impactó la confirmación de la plataforma para el ID <code>${brokerId}</code> ⏳\n\n` +
     `A veces las redes bancarias o de pago tardan entre <b>1 y 3 minutos</b> en sincronizar con el broker.\n\n` +
-    `No te preocupes: en cuanto el sistema reciba el aviso, <b>te enviaré tu clave VIP y el ZIP aquí mismo en automático</b> sin que tengas que hacer nada más. 🚀`,
+    `No te preocupes: en cuanto el sistema reciba el aviso, <b>te activaré el Status VIP Real automáticamente</b> sin que tengas que hacer nada más. 🚀`,
+
+  // 12.8 Duda: Cómo pasar a Cuenta Real
+  dudaComoReal: (nome) => [
+    `🚀 <b>¿Cómo activar tu Cuenta Real para retirar ganancias al banco?</b>\n\n` +
+    `¡Es súper sencillo, ${nome}! En cuanto decidas pasar de probar en Demo a generar dólares reales:\n\n` +
+    `1️⃣ Abre el broker y entra a la sección <b>Depósito / Cajero</b>.\n` +
+    `2️⃣ Selecciona tu método preferido (Pix, tarjeta de débito/crédito, transferencia bancaria local o cripto/Binance Pay).\n` +
+    `3️⃣ Fondea tu cuenta con el monto que prefieras (desde apenas <b>$5 a $10 USD</b> o equivalente en tu moneda local).\n\n` +
+    `💡 <b>Recuerda:</b> Todo el saldo es <b>100% tuyo</b> para operar y retirar cuando quieras. A mí no me pagas nada: el software te queda <b>VITALICIO</b> de regalo y el bot te asciende a <b>VIP REAL</b> de inmediato 🎯`
+  ],
+
+  botoesDudaComoReal: [
+    [{ text: '💳 Ver métodos de pago', callback_data: 'faq_metodos' }],
+    [{ text: '💵 ¿Cuál es el monto mínimo?', callback_data: 'faq_minimo' }],
+    [{ text: '🔄 Ya deposité (Verificar)', callback_data: 'check_deposit_now' }],
+    [{ text: '⬅️ Ver otras preguntas', callback_data: 'menu_dudas' }]
+  ],
+
+  // 12.9 Duda: Instalación en Chrome
+  dudaInstalacion: () => [
+    `📖 <b>Cómo instalar la extensión en Google Chrome:</b>\n\n` +
+    `1️⃣ Descarga el archivo <code>inflitrus-signals-cliente.zip</code> enviado en este chat y descomprímelo en tu PC.\n` +
+    `2️⃣ En Google Chrome, escribe <code>chrome://extensions/</code> en la barra de direcciones.\n` +
+    `3️⃣ Activa el botón <b>Modo de desarrollador</b> (arriba a la derecha).\n` +
+    `4️⃣ Haz clic en <b>Cargar descomprimida</b> y selecciona la carpeta que descomprimiste.\n` +
+    `5️⃣ Abre el broker, toca el ícono de Infiltrus arriba y pega tu clave oficial.\n\n` +
+    `¡Listo! El motor M1 empezará a marcarte las entradas en vivo en tu pantalla ⚡`
+  ],
+
+  // Respuestas interativas a botones de seguimiento Demo
+  respostaDemoInstalada: (nome) =>
+    `¡Excelente, ${nome}! 🎉 Me alegro mucho de que ya la tengas en tu navegador.\n\n` +
+    `Ahora ábrete el broker en <b>Cuenta Demo</b> y pruébala en vivo con un par de señales. ¡Vas a ver cómo clava las entradas! Cuéntame qué tal te va 😊🎯`,
+
+  respostaDemoProbada: (nome) => [
+    `¡Qué locura, ${nome}! ¡Te dije que la precisión del motor M1 es de otro nivel! 🔥👏`,
+    `Ahora que ya lo comprobaste con tus propios ojos, el paso obvio para no dejar dinero sobre la mesa es <b>activar tu Cuenta Real</b> con el mínimo ($5 USD).\n\n` +
+    `Así cada señal que ganes será plata real retirable a tu bolsillo 😉 ¿Quieres que te ayude a ver los medios de depósito?`
+  ],
+
+  respostaDemoTarde: (nome) =>
+    `¡De una, ${nome}! Tómate tu tiempo. Abre la extensión cuando estés frente a la pantalla y ejecuta 2 o 3 operaciones en saldo Demo para agarrarle el ritmo.\n\n` +
+    `¡Cualquier duda que te surja me escribes directo por acá! 👍`,
 
   // --------------------------------------------------------------------------
-  // 13. MENSAJES DE FOLLOW-UP ESTRATÉGICOS (RECUPERACIÓN DE LEADS)
+  // 13. MENSAJES DE FOLLOW-UP ESTRATÉGICOS (JORNADA DE ATIVACIÓN EM 2 ETAPAS)
   // --------------------------------------------------------------------------
 
   // Caso A1: Pidió el link o inició, pero no envió ID (35-60 minutos de inactividad)
@@ -298,7 +366,7 @@ export const mensagens = {
   followUpSemId2: (nome) => [
     `¡Ey, ${nome}! Te paso a contar rápido por acá 📈`,
     `En la sesión de señales en vivo de recién, el motor M1 volvió a clavar <b>4 operaciones ganadas consecutivas</b> 🎯🔥`,
-    `No quiero que te quedes mirando desde afuera mientras los demás están operando en automático. Solo pásame tu <b>ID de la plataforma</b> para activarte tu clave VIP y mandarte el archivo de una vez.\n\n` +
+    `No quiero que te quedes mirando desde afuera mientras los demás están operando en automático. Solo pásame tu <b>ID de la plataforma</b> para activarte tu herramienta y mandarte el archivo de una vez.\n\n` +
     `¿Tienes 2 minutitos para dejarlo listo ahora?`
   ],
 
@@ -308,28 +376,78 @@ export const mensagens = {
     [{ text: '❓ Tengo una pregunta', callback_data: 'menu_dudas' }]
   ],
 
-  // Caso B1: Envió ID pero aún no realizó el depósito (45-60 minutos)
-  followUpSemDeposito1: (nome, brokerId) => [
-    `¡Hola, ${nome}! ¿Pudiste entrar a la sección de depósitos en el broker? 😊`,
-    `Te recuerdo que no necesitas poner mucho: con <b>cualquier valor</b> que deposites para tu propio saldo ya se te desbloquea el software de forma <b>VITALICIA</b> 🎯`,
-    `Además, la acreditación es <i>instantánea</i> por los métodos locales (Pix, tarjeta, cripto o transferencia según tu país).\n\n` +
-    `¿Tuviste alguna complicación al elegir el medio de pago o quieres que te ayude a completarlo?`
+  // Caso B1: Recibió la extensión Demo pero no ha interactuado (45-60 min - Check-in Instalación)
+  followUpDemoInstalacao: (nome) => [
+    `¡Hola, ${nome}! ¿Cómo vas con la instalación de la extensión? 😊`,
+    `Quería consultarte rápido si pudiste descomprimir el archivo y cargarlo en Google Chrome sin problema.`,
+    `Si te trabaste en algún paso o necesitas una mano, escríbeme por acá que te acompaño personalmente para dejarlo listo en 1 minuto 👍`
   ],
 
-  botoesFollowUpSemDeposito1: [
+  botoesFollowUpDemoInstalacao: [
+    [{ text: '✅ Ya la tengo instalada', callback_data: 'demo_instalada' }],
+    [{ text: '❓ Ayuda con la instalación', callback_data: 'faq_instalar' }],
+    [{ text: '💳 Activar Cuenta Real ($5 USD)', callback_data: 'faq_como_real' }]
+  ],
+
+  // Caso B2: Demo instalada (3-5 horas - Desafío Demo y Validación de Señales)
+  followUpDemoTeste: (nome) => [
+    `¡Ey, ${nome}! Te paso a contar rápido por acá 📈`,
+    `En la sesión de recién el algoritmo volvió a meter <b>3 victorias consecutivas</b> en M1 🎯🔥`,
+    `¿Ya pudiste probar un par de señales con el saldo ficticio en tu Cuenta Demo? Cuéntame cómo te fue con el motor M1:`
+  ],
+
+  botoesFollowUpDemoTeste: [
+    [{ text: '🎯 Ya la probé, ¡es brutal!', callback_data: 'demo_probada' }],
+    [{ text: '⏳ La voy a probar hoy', callback_data: 'demo_tarde' }],
+    [{ text: '💳 Activar Cuenta Real ($5 USD)', callback_data: 'faq_como_real' }]
+  ],
+
+  // Caso B3: Conversión Natural a Cuenta Real / FTD (12-24 horas)
+  followUpDemoConversaoReal: (nome, brokerId) => [
+    `¡Hola, ${nome}! ¿Cómo estás? 😊`,
+    `Ya viste con tus propios ojos cómo analiza el mercado el algoritmo en tu cuenta Demo. Pero seamos sinceros: <b>los dólares de prueba no pagan cuentas ni se pueden retirar al banco</b> 😉`,
+    `El siguiente paso natural es fondear tu cuenta real para empezar a retirar ganancias de verdad. Puedes arrancar con el monto mínimo de tu país (desde apenas <b>$5 USD</b> o el equivalente en Pix/tarjeta local).\n\n` +
+    `Apenas hagas tu depósito, mi sistema lo detecta en automático y te asciende de inmediato a <b>STATUS VIP REAL VITALICIO</b> con soporte prioritario 🚀\n\n` +
+    `¿Quieres que te ayude a ver los métodos de pago disponibles para tu país?`
+  ],
+
+  botoesFollowUpDemoConversaoReal: [
     [{ text: '💳 Ver métodos de pago', callback_data: 'faq_metodos' }],
     [{ text: '💵 ¿Cuál es el monto mínimo?', callback_data: 'faq_minimo' }],
     [{ text: '🔄 Ya deposité (Verificar)', callback_data: 'check_deposit_now' }]
   ],
 
-  // Caso B2: Envió ID, sigue sin depositar (6-12 horas / reserva de plaza VIP)
-  followUpSemDeposito2: (nome, brokerId) => [
-    `¡Hola de nuevo, ${nome}! Te escribo directo porque tengo tu clave VIP y tu plaza reservada en el sistema con el ID <code>${brokerId}</code> 🔒`,
-    `Como liberamos licencias en cupos limitados para cuidar la precisión del algoritmo en el broker, quería consultarte antes de liberar tu cupo a la lista de espera.\n\n` +
-    `Apenas fondees tu cuenta con cualquier monto, tu saldo queda 100% para ti y la herramienta te queda <b>activada de por vida</b> 🚀`,
-    `¿Tienes alguna duda o quieres que te ayude a fondear para que arranques hoy mismo?`
+  // Caso B4: Último llamado / Reserva VIP (36-48 horas)
+  followUpDemoUltimoLlamado: (nome, brokerId) => [
+    `¡Hola de nuevo, ${nome}! Te escribo directo para saber cómo vienen tus operaciones 🎯`,
+    `Recuerda que tu cuenta con el ID <code>${brokerId}</code> tiene reservado el beneficio del <b>Bono de Bienvenida</b> y la membresía <b>VITALICIA</b> al realizar tu primer depósito (desde $5 USD).\n\n` +
+    `Todo tu saldo queda 100% para ti para operar y retirar cuando quieras. ¡No te quedes operando solo en saldo ficticio mientras el mercado da oportunidades todos los días! 📈\n\n` +
+    `Si necesitas cualquier ayuda para fondear tu cuenta, estoy por acá para asistirte.`
   ],
 
+  botoesFollowUpDemoUltimoLlamado: [
+    [{ text: '💳 ¿Cómo hago el depósito?', callback_data: 'faq_metodos' }],
+    [{ text: '🔄 Ya lo hice, verificar', callback_data: 'check_deposit_now' }],
+    [{ text: '❓ Tengo una pregunta', callback_data: 'menu_dudas' }]
+  ],
+
+  // Compatibilidad con llamadas legacy
+  followUpSemDeposito1: (nome, brokerId) => [
+    `¡Hola, ${nome}! ¿Pudiste probar tus señales en Demo o entrar a la sección de depósitos? 😊`,
+    `Te recuerdo que no necesitas poner mucho para operar en real: con <b>cualquier valor</b> (desde $5 USD) ya se te desbloquea la membresía de forma <b>VITALICIA</b> en <b>STATUS VIP REAL</b> 🎯`,
+    `Además, la acreditación es <i>instantánea</i> por métodos locales (Pix, tarjeta, cripto o transferencia según tu país).\n\n` +
+    `¿Tuviste alguna duda o quieres que te ayude a completarlo?`
+  ],
+  botoesFollowUpSemDeposito1: [
+    [{ text: '💳 Ver métodos de pago', callback_data: 'faq_metodos' }],
+    [{ text: '💵 ¿Cuál es el monto mínimo?', callback_data: 'faq_minimo' }],
+    [{ text: '🔄 Ya deposité (Verificar)', callback_data: 'check_deposit_now' }]
+  ],
+  followUpSemDeposito2: (nome, brokerId) => [
+    `¡Hola de nuevo, ${nome}! Te escribo directo porque tengo tu plaza reservada en el sistema con el ID <code>${brokerId}</code> 🔒`,
+    `Apenas fondees tu cuenta con cualquier monto mínimo, tu saldo queda 100% para ti y la herramienta te queda <b>activada de por vida en Modo Real</b> 🚀`,
+    `¿Tienes alguna duda o quieres que te ayude a fondear para que arranques hoy mismo?`
+  ],
   botoesFollowUpSemDeposito2: [
     [{ text: '💳 ¿Cómo hago el depósito?', callback_data: 'faq_metodos' }],
     [{ text: '🔄 Ya lo hice, verificar', callback_data: 'check_deposit_now' }],

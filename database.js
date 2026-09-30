@@ -150,7 +150,10 @@ class Database {
   getStats() {
     const totalUsers = Object.keys(this.data.users).length;
     const activeLicenses = this.data.licenses.length;
+    const demoUsers = Object.values(this.data.users).filter(u => u.status === 'DEMO_ACTIVE').length;
+    const vipRealUsers = Object.values(this.data.users).filter(u => u.status === 'VIP_REAL' || u.status === 'ACTIVE').length;
     const waitingDeposit = Object.values(this.data.users).filter(u => u.status === 'WAITING_DEPOSIT').length;
+    const withoutId = Object.values(this.data.users).filter(u => !u.brokerId && u.status !== 'VIP_REAL' && u.status !== 'ACTIVE').length;
     const totalEvents = this.data.channelEvents.length;
     const depositEvents = this.data.channelEvents.filter(e => e.type === 'DEPOSITO').length;
     const signupEvents = this.data.channelEvents.filter(e => e.type === 'CADASTRO').length;
@@ -158,15 +161,26 @@ class Database {
     const followUpsSent = Object.values(this.data.users).reduce((acc, u) => {
       if (u.followUps?.noId_1) acc.noId_1++;
       if (u.followUps?.noId_2) acc.noId_2++;
-      if (u.followUps?.noDeposit_1) acc.noDeposit_1++;
-      if (u.followUps?.noDeposit_2) acc.noDeposit_2++;
+      if (u.followUps?.demo_1 || u.followUps?.noDeposit_1) {
+        acc.demo_1++;
+        acc.noDeposit_1++;
+      }
+      if (u.followUps?.demo_2 || u.followUps?.noDeposit_2) {
+        acc.demo_2++;
+        acc.noDeposit_2++;
+      }
+      if (u.followUps?.demo_3) acc.demo_3++;
+      if (u.followUps?.demo_4) acc.demo_4++;
       return acc;
-    }, { noId_1: 0, noId_2: 0, noDeposit_1: 0, noDeposit_2: 0 });
+    }, { noId_1: 0, noId_2: 0, demo_1: 0, demo_2: 0, demo_3: 0, demo_4: 0, noDeposit_1: 0, noDeposit_2: 0 });
 
     return {
       totalUsers,
       activeLicenses,
+      demoUsers,
+      vipRealUsers,
       waitingDeposit,
+      withoutId,
       totalEvents,
       depositEvents,
       signupEvents,
