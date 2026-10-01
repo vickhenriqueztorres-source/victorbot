@@ -43,6 +43,18 @@ server.listen(port, () => {
   console.log(`[HTTP] Servidor de health check ativo na porta ${port}`);
 });
 
+// Auto-ping de keep-alive a cada 8 minutos (evita suspensão/hibernação no plano Free do Render)
+const renderExternalUrl = process.env.RENDER_EXTERNAL_URL || 'https://victorbot-xkuh.onrender.com';
+setInterval(async () => {
+  try {
+    const res = await fetch(renderExternalUrl);
+    console.log(`[KEEP-ALIVE] Ping periódico em ${renderExternalUrl} -> Status ${res.status}`);
+  } catch (err) {
+    console.error(`[KEEP-ALIVE] Falha no auto-ping: ${err.message}`);
+  }
+}, 8 * 60 * 1000);
+
+
 const api = new TelegramApi(config.botToken);
 
 // Função para simular digitação e pausa humana
@@ -124,7 +136,11 @@ async function deliverAccessToUser(chatId, clientName, brokerId, plan = 'DEMO VI
   const licenseMsg = isRealVip
     ? mensagens.entregaLicenca(name, license.code, license.durationDays, license.plan)
     : mensagens.entregaLicencaDemo(name, license.code, license.durationDays, license.plan);
-  await api.sendMessage(chatId, licenseMsg);
+  try {
+    await api.sendMessage(chatId, licenseMsg);
+  } catch (err) {
+    console.error(`[AVISO] Falha ao enviar mensagem de licença para ${chatId}:`, err.message);
+  }
 
   // 4. Envia o arquivo ZIP da extensão se existir
   if (fs.existsSync(config.extensionZipPath)) {
@@ -143,14 +159,22 @@ async function deliverAccessToUser(chatId, clientName, brokerId, plan = 'DEMO VI
   // 5. Envia o tutorial passo a passo de instalação no Chrome
   await simulateTyping(chatId, 2000);
   const guideMsg = mensagens.guiaInstalacao();
-  await api.sendMessage(chatId, guideMsg);
+  try {
+    await api.sendMessage(chatId, guideMsg);
+  } catch (err) {
+    console.error(`[AVISO] Falha ao enviar guia de instalação para ${chatId}:`, err.message);
+  }
 
   // 6. Se for ativação DEMO, envia o Desafio Demo de 2 a 3 sinais com botões interativos
   if (!isRealVip) {
     await simulateTyping(chatId, 2000);
     const desafioMsg = mensagens.desafioDemo();
     const keyboard = { inline_keyboard: mensagens.botoesEntregaDemo };
-    await api.sendMessage(chatId, desafioMsg, { reply_markup: keyboard });
+    try {
+      await api.sendMessage(chatId, desafioMsg, { reply_markup: keyboard });
+    } catch (err) {
+      console.error(`[AVISO] Falha ao enviar desafio demo para ${chatId}:`, err.message);
+    }
   }
 
   console.log(`[SUCESSO] Acesso (${plan} - ${durationDays} dias) entregue com sucesso para ${name} (ID: ${brokerId})`);
@@ -847,6 +871,7 @@ async function startBot() {
         // Post vindo do canal de notificações
         if (update.channel_post) {
           try {
+            console.log(`[CANAL] Novo post recebido no canal (ID: ${update.channel_post.chat?.id})`);
             await handleChannelPost(update.channel_post);
           } catch (err) {
             console.error('[ERRO] Falha ao processar post do canal:', err.message);
@@ -856,6 +881,8 @@ async function startBot() {
         // Mensagem privada de usuário
         if (update.message && update.message.chat.type === 'private') {
           try {
+            const sender = update.message.from ? `${update.message.from.first_name} (@${update.message.from.username || 'sem_user'})` : 'Usuário';
+            console.log(`[MSG] Recebida de ${sender} (Chat: ${update.message.chat.id}): "${update.message.text || '[mídia/ação]'}"`);
             await handlePrivateMessage(update.message);
           } catch (err) {
             console.error('[ERRO] Falha ao processar mensagem privada:', err.message);
@@ -865,6 +892,8 @@ async function startBot() {
         // Clique em botão interativo
         if (update.callback_query) {
           try {
+            const sender = update.callback_query.from ? `${update.callback_query.from.first_name} (@${update.callback_query.from.username || 'sem_user'})` : 'Usuário';
+            console.log(`[BOTÃO] Clique de ${sender} (Chat: ${update.callback_query.message?.chat?.id}): "${update.callback_query.data}"`);
             await handleCallbackQuery(update.callback_query);
           } catch (err) {
             console.error('[ERRO] Falha ao processar clique em botão:', err.message);
