@@ -89,6 +89,36 @@ async function sendHumanMessage(chatId, textOrArray, options = {}, delayMs = con
   }
 }
 
+// Função para simular upload de foto com pausa humanizada
+async function simulatePhotoUpload(chatId, delayMs = config.typingDelayMs) {
+  try {
+    await api.sendChatAction(chatId, 'upload_photo');
+  } catch (err) {
+    // Ignora se o chat foi bloqueado
+  }
+  await new Promise(resolve => setTimeout(resolve, delayMs));
+}
+
+// Envia foto com legenda humanizada e botões inline
+async function sendHumanPhoto(chatId, photoPath, captionOrArray, options = {}, delayMs = config.typingDelayMs) {
+  try {
+    const caption = Array.isArray(captionOrArray) ? captionOrArray.join('\n\n') : captionOrArray;
+    if (fs.existsSync(photoPath)) {
+      await simulatePhotoUpload(chatId, delayMs);
+      await api.sendPhoto(chatId, photoPath, caption, options);
+      return true;
+    } else {
+      // Se a imagem não for encontrada, envia como mensagem de texto normal
+      return sendHumanMessage(chatId, captionOrArray, options, delayMs);
+    }
+  } catch (err) {
+    console.error(`[AVISO] Falha ao enviar foto para chat ${chatId}: ${err.message}`);
+    // Fallback: se falhar o envio da foto, tenta enviar como texto normal
+    return sendHumanMessage(chatId, captionOrArray, options, delayMs);
+  }
+}
+
+
 /**
  * Libera o acesso do cliente ao software Infiltrus:
  * - Se plan === 'DEMO VIP': entrega imediata sem atrito para testar na conta demo com saldo fictício.
@@ -321,9 +351,9 @@ async function handlePrivateMessage(msg) {
       const brokerId = targetUser.brokerId || '849302';
 
       if (typeNum === '1') {
-        const text = mensagens.followUpSemId1(name);
-        await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpSemId1(config.brokerAffiliateUrl) } });
-        return api.sendMessage(chatId, `✅ Follow-up 1 (Sem ID) disparado para ${name}!`);
+        const text = mensagens.followUpSemId1(name, config.brokerAffiliateUrl);
+        await sendHumanPhoto(targetChat, config.proofPhotoPath, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpSemId1(config.brokerAffiliateUrl) } });
+        return api.sendMessage(chatId, `✅ Follow-up 1 (Sem ID + Foto de 4 Vitórias) disparado para ${name}!`);
       } else if (typeNum === '2') {
         const text = mensagens.followUpSemId2(name);
         await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpSemId2(config.brokerAffiliateUrl) } });
@@ -727,13 +757,13 @@ async function checkAndSendFollowUps() {
         if (!user.brokerId) {
           // Follow-up A1: Entre 35 min e 24h de inatividade
           if (idleTimeMs >= 35 * MS_IN_MINUTE && idleTimeMs < 24 * MS_IN_HOUR && !user.followUps.noId_1) {
-            console.log(`[FOLLOW-UP] Enviando Follow-up 1 (Sem ID) para ${user.firstName} (Chat: ${userChatId})`);
+            console.log(`[FOLLOW-UP] Enviando Follow-up 1 (Sem ID + Foto de 4 Vitórias) para ${user.firstName} (Chat: ${userChatId})`);
             user.followUps.noId_1 = new Date().toISOString();
             db.saveUser(userChatId, { followUps: user.followUps });
 
-            const text = mensagens.followUpSemId1(user.firstName || 'amigo');
+            const text = mensagens.followUpSemId1(user.firstName || 'amigo', config.brokerAffiliateUrl);
             const keyboard = { inline_keyboard: mensagens.botoesFollowUpSemId1(config.brokerAffiliateUrl) };
-            await sendHumanMessage(userChatId, text, { reply_markup: keyboard });
+            await sendHumanPhoto(userChatId, config.proofPhotoPath, text, { reply_markup: keyboard });
             continue;
           }
 

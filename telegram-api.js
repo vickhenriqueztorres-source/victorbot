@@ -94,6 +94,9 @@ export class TelegramApi {
       formData.append('caption', caption);
       formData.append('parse_mode', options.parse_mode || 'HTML');
     }
+    if (options.reply_markup) {
+      formData.append('reply_markup', typeof options.reply_markup === 'string' ? options.reply_markup : JSON.stringify(options.reply_markup));
+    }
 
     try {
       const res = await fetch(url, {
@@ -107,6 +110,43 @@ export class TelegramApi {
       return data.result;
     } catch (err) {
       console.error('[TelegramApi] Erro ao enviar documento:', err.message);
+      throw err;
+    }
+  }
+
+  async sendPhoto(chatId, filePath, caption = '', options = {}) {
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`Arquivo de imagem não encontrado para envio: ${filePath}`);
+    }
+
+    const url = `${this.baseUrl}/sendPhoto`;
+    const fileName = path.basename(filePath);
+    const fileBuffer = fs.readFileSync(filePath);
+    const fileBlob = new Blob([fileBuffer]);
+
+    const formData = new FormData();
+    formData.append('chat_id', String(chatId));
+    formData.append('photo', fileBlob, fileName);
+    if (caption) {
+      formData.append('caption', caption);
+      formData.append('parse_mode', options.parse_mode || 'HTML');
+    }
+    if (options.reply_markup) {
+      formData.append('reply_markup', typeof options.reply_markup === 'string' ? options.reply_markup : JSON.stringify(options.reply_markup));
+    }
+
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        throw new Error(data.description || 'Falha ao enviar foto');
+      }
+      return data.result;
+    } catch (err) {
+      console.error('[TelegramApi] Erro ao enviar foto:', err.message);
       throw err;
     }
   }

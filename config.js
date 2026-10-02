@@ -72,6 +72,13 @@ export const config = {
       : path.resolve(__dirname, '..', 'Extensao - b2 - isca digital', 'inflitrus-signals-cliente.zip')
   ),
 
+  // Caminho da imagem de prova de assertividade (4 vitórias consecutivas para o Follow-Up 1)
+  proofPhotoPath: process.env.PROOF_PHOTO_PATH || (
+    fs.existsSync(path.resolve(__dirname, 'assets', 'prova-4-vitorias.jpg'))
+      ? path.resolve(__dirname, 'assets', 'prova-4-vitorias.jpg')
+      : path.resolve(__dirname, 'prova-4-vitorias.jpg')
+  ),
+
   // IDs numéricos do Telegram dos administradores que podem rodar comandos /admin e /liberar
   adminIds: (process.env.ADMIN_IDS || '').split(',').map(s => s.trim()).filter(Boolean),
 
