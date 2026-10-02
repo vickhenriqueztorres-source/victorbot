@@ -355,9 +355,9 @@ async function handlePrivateMessage(msg) {
         await sendHumanPhoto(targetChat, config.proofPhotoPath, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpSemId1(config.brokerAffiliateUrl) } });
         return api.sendMessage(chatId, `✅ Follow-up 1 (Sem ID + Foto de 4 Vitórias) disparado para ${name}!`);
       } else if (typeNum === '2') {
-        const text = mensagens.followUpSemId2(name);
+        const text = mensagens.followUpSemId2(name, config.brokerAffiliateUrl);
         await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpSemId2(config.brokerAffiliateUrl) } });
-        return api.sendMessage(chatId, `✅ Follow-up 2 (Sem ID - Prova Social) disparado para ${name}!`);
+        return api.sendMessage(chatId, `✅ Follow-up 2 (Sem ID - Filtro de Ejecutores) disparado para ${name}!`);
       } else if (typeNum === '3') {
         const text = mensagens.followUpDemoInstalacao(name);
         await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpDemoInstalacao } });
@@ -767,15 +767,15 @@ async function checkAndSendFollowUps() {
             continue;
           }
 
-          // Follow-up A2: 4h após Follow-up A1 e menos de 48h desde o início (Prova Social)
+          // Follow-up A2: 4h após Follow-up A1 e menos de 48h desde o início (Filtro de Ejecutores)
           if (user.followUps.noId_1 && !user.followUps.noId_2) {
             const timeSinceFu1 = now - new Date(user.followUps.noId_1).getTime();
             if (timeSinceFu1 >= 4 * MS_IN_HOUR && (now - createdAt) < 48 * MS_IN_HOUR) {
-              console.log(`[FOLLOW-UP] Enviando Follow-up 2 (Sem ID - Prova Social) para ${user.firstName} (Chat: ${userChatId})`);
+              console.log(`[FOLLOW-UP] Enviando Follow-up 2 (Sem ID - Filtro de Ejecutores) para ${user.firstName} (Chat: ${userChatId})`);
               user.followUps.noId_2 = new Date().toISOString();
               db.saveUser(userChatId, { followUps: user.followUps });
 
-              const text = mensagens.followUpSemId2(user.firstName || 'amigo');
+              const text = mensagens.followUpSemId2(user.firstName || 'amigo', config.brokerAffiliateUrl);
               const keyboard = { inline_keyboard: mensagens.botoesFollowUpSemId2(config.brokerAffiliateUrl) };
               await sendHumanMessage(userChatId, text, { reply_markup: keyboard });
               continue;

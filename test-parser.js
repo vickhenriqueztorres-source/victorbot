@@ -96,10 +96,11 @@ test('Copywriting Mensagens: Follow-ups estratégicos estão configurados com to
   assert.ok(fuSemId1.some(m => m.includes('B2 Trading')));
   assert.ok(mensagens.botoesFollowUpSemId1('https://link.com').length >= 2);
 
-  // Follow-up Sem ID 2 (Prova social M1 + FOMO)
-  const fuSemId2 = mensagens.followUpSemId2('Carlos');
+  // Follow-up Sem ID 2 (Postura de Filtro de Ejecutores)
+  const fuSemId2 = mensagens.followUpSemId2('Carlos', 'https://link.com');
   assert.ok(Array.isArray(fuSemId2));
-  assert.ok(fuSemId2.some(m => m.includes('140 miembros')));
+  assert.ok(fuSemId2.some(m => m.includes('fórmulas mágicas')));
+  assert.strictEqual(mensagens.botoesFollowUpSemId2('https://link.com').length, 2);
 
   // Follow-up Sem Depósito 1 (Acesso vitalício qualquer valor)
   const fuSemDep1 = mensagens.followUpSemDeposito1('Carlos', '849302');

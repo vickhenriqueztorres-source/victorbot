@@ -389,19 +389,18 @@ export const mensagens = {
     [{ text: '🆘 Necesito Ayuda', callback_data: 'menu_dudas' }]
   ],
 
-  // Caso A2: Pidió el link o inició, sigue sin enviar ID (+4 horas tras F1 - Prova Social + FOMO)
-  followUpSemId2: (nome) => [
-    `No dejes que tu cupo de Infiltrus expire en el servidor...\n\n` +
-    `Mientras estás dudando, más de <b>140 miembros de nuestra comunidad privada</b> están operando la sesión de la tarde con los filtros de assertividad en pantalla. 📈🔥\n\n` +
-    `No necesitas pagar mensualidades ni comprar cursos milagrosos. La herramienta es <b>100% gratuita</b> para usuarios de B2.\n\n` +
-    `Si en los próximos 60 minutos no recibo tu ID, el sistema reasignará tu licencia al siguiente trader en la lista de espera.\n\n` +
-    `Envíame tu ID ahora mismo para desbloquear tu acceso. 👇`
+  // Caso A2: Pidió el link o inició, sigue sin enviar ID (+4 horas tras F1 - Postura e Filtro de Ejecutores)
+  followUpSemId2: (nome, linkAfiliado = config.brokerAffiliateUrl) => [
+    `No opero con gente que busca fórmulas mágicas sin mover un dedo.\n\n` +
+    `Crear tu cuenta en B2 Trading toma literalmente 45 segundos y $0 pesos. Si ni siquiera tienes la iniciativa de abrir un enlace y copiar 6 números de ID, entonces Infiltrus no te va a servir de nada. Las herramientas automáticas son para los que ejecutan, no para los que miran desde afuera.\n\n` +
+    `El archivo ZIP con la extensión y tu clave personalizada están listos en este chat.\n\n` +
+    `¿Lo vas a usar para operar la sesión de hoy o descarto tu registro?\n\n` +
+    `Regístrate aquí y manda tu ID: <a href="${linkAfiliado}">Registrarme en B2 Trading</a>`
   ],
 
-  botoesFollowUpSemId2: (linkAfiliado) => [
-    [{ text: '🔗 Crear Cuenta en B2 Trading', url: linkAfiliado }],
-    [{ text: '✅ Enviar mi ID', callback_data: 'has_account' }],
-    [{ text: '🆘 Necesito Ayuda', callback_data: 'menu_dudas' }]
+  botoesFollowUpSemId2: (linkAfiliado = config.brokerAffiliateUrl) => [
+    [{ text: '🚀 Registrarme en B2 y Activar', url: linkAfiliado }],
+    [{ text: '✍️ Enviar mi ID de 6 dígitos', callback_data: 'has_account' }]
   ],
 
   // Caso B1: Recibió la extensión Demo (+45 min - Check de Micro-vitória Demo)
