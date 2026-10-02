@@ -43,14 +43,14 @@ export const mensagens = {
   // 2. ENVÍO DEL ENLACE DE REGISTRO (Cuando hace clic en "Necesito el enlace oficial")
   // --------------------------------------------------------------------------
   enviarLinkCadastro: (nome, linkAfiliado) => [
-    `¡Excelente, ${nome}! Aquí tienes el enlace oficial con el bono de bienvenida habilitado:\n\n` +
-    `👉 <b><a href="${linkAfiliado}">CLIC AQUÍ PARA REGISTRARTE EN EL BROKER</a></b>\n\n` +
-    `Te toma menos de 1 minuto:\n` +
-    `1️⃣ Entra al enlace y regístrate con tu correo y contraseña.\n` +
-    `2️⃣ Una vez adentro, copia tu número de <b>ID</b> (lo encuentras arriba en el menú de tu perfil del broker).\n` +
-    `3️⃣ En cuanto lo tengas, envíame tu ID por este chat para rastrear tu cuenta y liberar tu acceso VIP de inmediato. 🚀`,
+    `Aquí tienes el enlace oficial:\n\n` +
+    `👉 <b><a href="${linkAfiliado}">CLIC AQUÍ PARA REGISTRARTE EN B2 TRADING</a></b>\n\n` +
+    `Te toma literalmente 45 segundos:\n` +
+    `1️⃣ Abre el enlace y regístrate con tu correo.\n` +
+    `2️⃣ Copia tu número de <b>ID</b> (arriba en el menú de tu perfil).\n` +
+    `3️⃣ Envíamelo por este chat para vincular tu licencia de inmediato. 🚀`,
 
-    `¿Pudiste abrir el enlace sin problema? Si tienes cualquier consulta, avísame por acá 😊`
+    `El mercado no espera a los indecisos. Las mejores entradas del par EUR/USD se están dando ahora mismo. Abre tu enlace, copia tu ID y mándamelo ya.`
   ],
 
   botoesLinkCadastro: [
@@ -62,9 +62,8 @@ export const mensagens = {
   // 3. SOLICITAR ID DEL BROKER (Cuando hace clic en "Ya tengo cuenta creada")
   // --------------------------------------------------------------------------
   pedirIdCorretora: (nome) =>
-    `¡De una, ${nome}! Es súper rápido:\n\n` +
-    `Pásame por acá el número de tu <b>ID de la plataforma</b> (lo encuentras arriba en el menú de tu perfil).\n\n` +
-    `En cuanto me lo envíes, lo verifico en el sistema para desbloquear tu clave y enviarte la herramienta. 😊`,
+    `Excelente, ${nome}. Pásame por acá tu número de <b>ID de B2 Trading</b> (lo encuentras arriba en el menú de tu perfil).\n\n` +
+    `En cuanto lo reciba, el sistema valida tu cuenta y te entrega tu archivo ZIP y tu clave criptográfica en el acto. 🎯`,
 
   botoesPedirId: [
     [{ text: '🔗 No tengo cuenta, pásame el link', callback_data: 'need_link' }],
@@ -111,16 +110,16 @@ export const mensagens = {
 
   botoesEntregaDemo: [
     [{ text: '📺 Ver Video de Instalación', url: config.tutorialVideoUrl || 'https://youtu.be/_-3dLIXNchg?si=St8-h6nT8S_NO3O4' }],
-    [{ text: '💳 Activar Cuenta Real ($5 USD)', callback_data: 'faq_como_real' }],
-    [{ text: '🆘 Necesito Ayuda / Soporte', callback_data: 'menu_dudas' }]
+    [{ text: '💳 Activar Cuenta Real ($10 USD)', callback_data: 'faq_como_real' }],
+    [{ text: '🆘 Centro de Dudas', callback_data: 'menu_dudas' }]
   ],
 
   // --------------------------------------------------------------------------
   // 6. ID AÚN NO DETECTADO EN EL CANAL (Posible delay de la plataforma)
   // --------------------------------------------------------------------------
   idNaoEncontradoAinda: (nome, brokerId) =>
-    `Mmm, todavía no me aparece el ID <code>${brokerId}</code> en mi pantalla... A veces el broker tarda 1 o 2 minutitos en sincronizar y enviar la notificación al sistema.\n\n` +
-    `Si recién te registraste, no te preocupes: confírmame por favor si tu ID es exactamente <code>${brokerId}</code> o pásamelo nuevamente por acá 😊`,
+    `El ID <code>${brokerId}</code> todavía no aparece registrado bajo mi enlace en el servidor. La sincronización tarda entre 1 y 2 minutos.\n\n` +
+    `Asegúrate de haberte registrado desde el enlace oficial y confírmame si tu ID es exactamente <code>${brokerId}</code>.`,
 
   botoesIdNaoEncontrado: [
     [{ text: '🔄 Volver a consultar ahora', callback_data: 'check_deposit_now' }],
@@ -192,11 +191,11 @@ export const mensagens = {
   // 12. MENÚ DE PREGUNTAS FRECUENTES Y OBJECIONES (FAQ SISTEMA)
   // --------------------------------------------------------------------------
   menuDudas: (nome) =>
-    `¡Claro que sí, ${nome}! Aquí estoy para despejarte cualquier duda que tengas antes de arrancar 😊\n\n` +
-    `Toca cualquiera de los botones de abajo o <i>escríbeme directamente tu pregunta</i> aquí en el chat:`,
+    `Dime qué punto necesitas resolver antes de operar, ${nome}:\n\n` +
+    `Toca cualquiera de las opciones de abajo o escribe tu pregunta directamente en el chat:`,
 
   botoesMenuDudas: [
-    [{ text: '🚀 ¿Cómo pasar a Cuenta Real ($5 USD)?', callback_data: 'faq_como_real' }],
+    [{ text: '🚀 ¿Cómo pasar a Cuenta Real ($10 USD)?', callback_data: 'faq_como_real' }],
     [{ text: '📖 ¿Cómo instalar la extensión en Chrome?', callback_data: 'faq_instalar' }],
     [{ text: '💵 ¿Cuánto es el depósito mínimo?', callback_data: 'faq_minimo' }],
     [{ text: '💳 ¿Qué métodos de pago aceptan?', callback_data: 'faq_metodos' }],
@@ -210,11 +209,11 @@ export const mensagens = {
   // 12.1 Duda: Monto Mínimo
   dudaMinimo: (nome) => [
     `💵 <b>¿Cuánto es el depósito mínimo para empezar?</b>\n\n` +
-    `¡Es súper accesible, ${nome}! Puedes arrancar prácticamente con <b>cualquier valor</b> que acepte el broker en tu país (generalmente desde unos <i>5 a 10 dólares</i> o el equivalente en tu moneda local) 🎯`,
+    `El depósito mínimo en B2 Trading es de apenas <b>$10 USD</b> (o el equivalente en tu moneda local: reales, pesos, etc.) 🎯`,
 
-    `💡 <b>Lo mejor de todo:</b>\n` +
-    `Ese dinero es <b>100% tuyo</b> en tu saldo real para operar y multiplicar con las señales.\n\n` +
-    `No me pagas ninguna membresía ni suscripción: el software Infiltrus te queda <b>VITALICIO</b> de regalo 🚀\n\n` +
+    `💡 <b>Lo fundamental:</b>\n` +
+    `Ese dinero es <b>100% tu capital de trabajo</b> en tu saldo real para operar y multiplicar con las señales.\n\n` +
+    `No me pagas ninguna mensualidad ni suscripción: el software Infiltrus te queda <b>VITALICIO</b> de regalo 🚀\n\n` +
     `¿Quieres que te pase el enlace para registrarte o ya tienes tu cuenta lista?`
   ],
 
@@ -314,10 +313,10 @@ export const mensagens = {
   // 12.8 Duda: Cómo pasar a Cuenta Real
   dudaComoReal: (nome) => [
     `🚀 <b>¿Cómo activar tu Cuenta Real para retirar ganancias al banco?</b>\n\n` +
-    `¡Es súper sencillo, ${nome}! En cuanto decidas pasar de probar en Demo a generar dólares reales:\n\n` +
+    `Es directo al grano, ${nome}. En cuanto decidas dejar de jugar monopoly en Demo y hacer dinero real:\n\n` +
     `1️⃣ Abre el broker y entra a la sección <b>Depósito / Cajero</b>.\n` +
-    `2️⃣ Selecciona tu método preferido (Pix, tarjeta de débito/crédito, transferencia bancaria local o cripto/Binance Pay).\n` +
-    `3️⃣ Fondea tu cuenta con el monto que prefieras (desde apenas <b>$5 a $10 USD</b> o equivalente en tu moneda local).\n\n` +
+    `2️⃣ Selecciona tu método preferido (Pix, tarjeta, transferencia local o cripto/Binance Pay).\n` +
+    `3️⃣ Fondea tu cuenta con el depósito mínimo de <b>$10 USD</b> (o equivalente en tu moneda local).\n\n` +
     `💡 <b>Recuerda:</b> Todo el saldo es <b>100% tuyo</b> para operar y retirar cuando quieras. A mí no me pagas nada: recibes <b>2 MESES COMPLETOS (60 DÍAS)</b> de acceso VIP oficial para operar y el bot te asciende a <b>VIP REAL</b> de inmediato 🎯`
   ],
 
@@ -343,18 +342,17 @@ export const mensagens = {
 
   // Respuestas interativas a botones de seguimiento Demo
   respostaDemoInstalada: (nome) =>
-    `¡Excelente, ${nome}! 🎉 Me alegro mucho de que ya la tengas en tu navegador.\n\n` +
-    `Ahora ábrete el broker en <b>Cuenta Demo</b> y pruébala en vivo con un par de señales. ¡Vas a ver cómo clava las entradas! Cuéntame qué tal te va 😊🎯`,
+    `Excelente, ${nome}. Nada de rodeos: abre tu broker en B2 Trading y pruébala en vivo con las próximas 2 o 3 señales.\n\n` +
+    `Filtra solo las confirmadas por volumen. Cuando veas la reacción del precio en M1, regresa y dime cuántas ganaste. 🎯`,
 
   respostaDemoProbada: (nome) => [
-    `¡Qué locura, ${nome}! ¡Te dije que la precisión del motor M1 es de otro nivel! 🔥👏`,
-    `Ahora que ya lo comprobaste con tus propios ojos, el paso obvio para no dejar dinero sobre la mesa es <b>activar tu Cuenta Real</b> con el mínimo ($5 USD).\n\n` +
-    `Así cada señal que ganes será plata real retirable a tu bolsillo 😉 ¿Quieres que te ayude a ver los medios de depósito?`
+    `Ya viste la asertividad matemática del algoritmo en tu propia pantalla. 🔥`,
+    `Ganar en la demo es jugar monopoly. Si estás listo para hacer dinero real de verdad, el mínimo son $10 USD. Tú decides si sigues operando dinero de fantasía o activas tu cuenta real ahora mismo.`
   ],
 
   respostaDemoTarde: (nome) =>
-    `¡De una, ${nome}! Tómate tu tiempo. Abre la extensión cuando estés frente a la pantalla y ejecuta 2 o 3 operaciones en saldo Demo para agarrarle el ritmo.\n\n` +
-    `¡Cualquier duda que te surja me escribes directo por acá! 👍`,
+    `Entendido, ${nome}. Abre la extensión cuando estés frente a la pantalla y ejecuta 2 o 3 operaciones para calibrar la velocidad de ejecución.\n\n` +
+    `El mercado premia a los que ejecutan. Avísame en cuanto termines. 🎯`,
 
   // Prueba social de la comunidad para Follow-Up Demo 2
   resultadosComunidad: (nome) => [
@@ -363,7 +361,7 @@ export const mensagens = {
     `• Sesión M1 EUR/USD: 8 victorias / 1 derrota 🎯\n` +
     `• Sesión M1 GBP/USD: 6 victorias / 0 derrotas 🔥\n` +
     `• Retiros procesados hoy por el broker: <b>+$1,420 USD</b> a miembros VIP 💰\n\n` +
-    `Todos empezaron exactamente igual: probando en Demo y luego fondeando sus primeros <b>$5 USD</b> para activar su cuenta real y retirar ganancias.\n\n` +
+    `Todos empezaron exactamente igual: probando en Demo y luego fondeando sus primeros <b>$10 USD</b> para activar su cuenta real y retirar ganancias.\n\n` +
     `¿Listo para dar el paso a saldo real, ${nome}?`
   ],
 
@@ -404,30 +402,32 @@ export const mensagens = {
   ],
 
   // Caso B1: Recibió la extensión Demo (+45 min - Check de Micro-vitória Demo)
+  // Caso B1: Recibió la extensión Demo (+45 min - Postura Trader: Instalación Inmediata)
   followUpDemoInstalacao: (nome) => [
-    `¿Pudiste fijar el ícono de Infiltrus en tu Chrome?\n\n` +
-    `Si ya lo hiciste, debes ver las flechas matemáticas y la caja de confirmación sobre el gráfico de B2. 🎯\n\n` +
-    `⚠️ <b>IMPORTANTE:</b> No operes en noticias de alto impacto. Espera que el indicador marque <b>"ENTRADA CONFIRMADA"</b>.\n\n` +
-    `Si tuviste alguna traba para instalar el ZIP, toca abajo y te ayudo en 1 minuto. 👇`
+    `Si todavía no fijaste la extensión en tu Chrome, estás regalándole dinero a la corretora.\n\n` +
+    `Instalarla te toma literalmente 60 segundos. Mira el video tutorial y déjala lista para operar:\n` +
+    `${config.tutorialVideoUrl || 'https://youtu.be/_-3dLIXNchg?si=St8-h6nT8S_NO3O4'}\n\n` +
+    `En cuanto la fijes, vas a ver las confirmaciones de entrada sobre el gráfico de B2 Trading. 🎯\n\n` +
+    `El mercado no espera a nadie. Déjala lista ahora mismo.`
   ],
 
   botoesFollowUpDemoInstalacao: [
     [{ text: '✅ Ya la instalé y estoy listo', callback_data: 'demo_instalada' }],
-    [{ text: '🛠️ Ayuda con la instalación', callback_data: 'faq_instalar' }]
+    [{ text: '📺 Ver Video de 1 Minuto', url: config.tutorialVideoUrl || 'https://youtu.be/_-3dLIXNchg?si=St8-h6nT8S_NO3O4' }],
+    [{ text: '💳 Activar Cuenta Real ($10 USD)', callback_data: 'faq_como_real' }]
   ],
 
-  // Caso B2: Demo instalada (+3 horas tras Demo 1 - "El Dinero Fantasma")
+  // Caso B2: Demo instalada (+3 horas tras Demo 1 - "El Dinero Fantasma" / Postura Ejecución)
   followUpDemoTeste: (nome) => [
-    `Pregunta rápida: ¿Cuántas operaciones ganaste hoy en la Demo? 👀\n\n` +
-    `Seguramente ya viste crecer ese saldo ficticio. Pero seamos sinceros...\n\n` +
-    `Ganar $50 o $100 dólares en una cuenta demo <b>no paga el alquiler, no compra comida ni te da libertad</b>. Es dinero fantasma.\n\n` +
-    `El algoritmo ya te demostró de lo que es capaz en tu propia pantalla. La única diferencia entre tú y los que están retirando ganancias todos los días a su cuenta bancaria es que ellos operan en cuenta Real. 💰\n\n` +
-    `Con solo <b>$5 USD</b> (lo que cuesta una taza de café) activas tu cuenta real en B2 y te desbloqueo la <b>Licencia VIP de 60 Días Completos</b>.\n\n` +
-    `¿Vas a seguir jugando con dinero de mentira o empezamos a operar en serio? 👇`
+    `Pregunta rápida: ¿cuántas operaciones ganaste hoy en la Demo? 👀\n\n` +
+    `Seguramente viste crecer ese saldo ficticio. Pero hablemos claro:\n\n` +
+    `Ganar en la demo es jugar monopoly. No paga el alquiler, no compra comida ni te da libertad. Es dinero de fantasía.\n\n` +
+    `El algoritmo ya te demostró de lo que es capaz en tu propia pantalla. La única diferencia entre tú y los traders que están retirando ganancias a su cuenta bancaria es que ellos operan en cuenta Real. 💰\n\n` +
+    `Si estás listo para hacer dinero real de verdad, el mínimo son $10 USD. Tú decides si sigues jugando de espectador o ejecutas como trader profesional.`
   ],
 
   botoesFollowUpDemoTeste: (linkAfiliado = config.brokerAffiliateUrl) => [
-    [{ text: '💳 Depositar $5 y Activar VIP 60 Días', url: linkAfiliado }],
+    [{ text: '💳 Depositar $10 y Activar VIP 60 Días', url: linkAfiliado }],
     [{ text: '📈 Ver Resultados de la Comunidad', callback_data: 'ver_comunidad' }]
   ],
 
@@ -437,38 +437,46 @@ export const mensagens = {
     `Inició con un depósito de solo $10 USD esta mañana.\n` +
     `Siguió 4 señales de Infiltrus con gestión 2x1.\n` +
     `Cerró su sesión con <b>$38 USD</b> y acaba de solicitar su retiro a Binance. 💸\n\n` +
-    `Los <b>$5 USD</b> de depósito mínimo no son para mí ni para pagar la herramienta (la extensión sigue siendo <b>GRATIS</b>). Es <b>TU capital de trabajo</b>. Sigue estando 100% en tu poder para multiplicarlo y retirarlo cuando quieras.\n\n` +
-    `Al hacer tu primer depósito hoy:\n` +
+    `Los <b>$10 USD</b> de depósito mínimo no son para mí ni para pagar la herramienta (la extensión sigue siendo <b>GRATIS</b>). Es <b>TU capital de trabajo</b>. Sigue estando 100% en tu poder para multiplicarlo y retirarlo cuando quieras.\n\n` +
+    `Al hacer tu primer depósito de $10 USD hoy:\n` +
     `✅ Tu licencia se extiende automáticamente a <b>60 Días VIP</b>\n` +
     `✅ Acceso a la configuración de Máxima Asertividad M1\n` +
     `✅ Plantilla de Gestión de Riesgo Blindada\n\n` +
-    `Toca abajo, deposita tus $5 USD y el bot actualizará tu clave en el acto: 👇`
+    `Toca abajo, deposita tus $10 USD y el bot actualizará tu clave en el acto: 👇`
   ],
 
   botoesFollowUpDemoConversaoReal: (linkAfiliado = config.brokerAffiliateUrl) => [
-    [{ text: '🚀 Depositar $5 en B2 Trading', url: linkAfiliado }]
+    [{ text: '🚀 Depositar $10 en B2 Trading', url: linkAfiliado }]
   ],
 
-  // Caso B4: Último llamado / Escasez Dura (+24 horas tras Demo 3)
+  // Caso B4: Reativação Dura / Último Chamado (Para quem travou após instalar - Postura Trader de Elite)
   followUpDemoUltimoLlamado: (nome, brokerId, linkAfiliado = config.brokerAffiliateUrl) => [
-    `Tu período de prueba Demo está llegando a su fin. ⏳\n\n` +
-    `Las licencias gratuitas de servidor requieren recursos de procesamiento en tiempo real. En pocas horas, tu clave Demo será dada de baja para liberar espacio a nuevos usuarios.\n\n` +
-    `Para mantener tu algoritmo activo y recibir la <b>Licencia VIP de 2 Meses (60 Días)</b>, solo necesitas fondear tu cuenta de B2 Trading con el mínimo de <b>$5 USD</b>.\n\n` +
-    `No dejes que tu herramienta se desactive:\n` +
-    `👉 <a href="${linkAfiliado}"><b>Clic aquí para Fondear tu Cuenta en B2 Trading</b></a>\n\n` +
-    `Nos vemos adentro de la Sala VIP. 🚀`
+    `Te voy a decir algo que ningún "guru" de YouTube te va a decir:\n\n` +
+    `Tener la mejor herramienta instalada en tu Chrome no te va a hacer ganar dinero si no tienes la disciplina de ejecutar.\n\n` +
+    `Infiltrus ya te marcó dónde entrar. Si te da miedo arriesgar $10 dólares en el mercado real, entonces el trading no es para ti y es mejor que te dediques a otra cosa.\n\n` +
+    `Pero si quieres operar con ventaja matemática y dejar de perder por culpa de indicadores viejos:\n\n` +
+    `1. Deposita los $10 mínimos en B2.\n` +
+    `2. Entra a las sesiones VIP con nosotros.\n` +
+    `3. Retira tus primeras ganancias esta misma semana.\n\n` +
+    `La puerta de la sala VIP se cierra hoy a medianoche.\n\n` +
+    `👉 <a href="${linkAfiliado}"><b>Clic aquí para Depositar $10 y Activar VIP</b></a>`
   ],
 
   botoesFollowUpDemoUltimoLlamado: (linkAfiliado = config.brokerAffiliateUrl) => [
-    [{ text: '⚡ Activar VIP Real con $5 USD', url: linkAfiliado }]
+    [{ text: '⚡ Depositar $10 y Activar VIP', url: linkAfiliado }],
+    [{ text: '✍️ Ya deposité (Verificar)', callback_data: 'check_deposit_now' }]
   ],
+
+  // Script de Reativação Dura (Exportação explícita para reuso)
+  reativacaoDura: (nome, brokerId, linkAfiliado = config.brokerAffiliateUrl) =>
+    mensagens.followUpDemoUltimoLlamado(nome, brokerId, linkAfiliado),
 
   // Compatibilidad con llamadas legacy
   followUpSemDeposito1: (nome, brokerId) => [
-    `¡Hola, ${nome}! ¿Pudiste probar tus señales en Demo o entrar a la sección de depósitos? 😊`,
-    `Te recuerdo que no necesitas poner mucho para operar en real: con <b>cualquier valor</b> (desde $5 USD) ya se te desbloquea la membresía de forma <b>VITALICIA</b> o tus <b>2 MESES COMPLETOS (60 DÍAS)</b> en <b>STATUS VIP REAL</b> 🎯`,
+    `¡Hola, ${nome}! ¿Pudiste calibrar tus señales en Demo o entrar a fondear tu cuenta?`,
+    `Te recuerdo que no necesitas poner mucho para operar en real: con el mínimo de <b>$10 USD</b> ya se te desbloquea la membresía en <b>STATUS VIP REAL (60 DÍAS COMPLETOS)</b> 🎯`,
     `Además, la acreditación es <i>instantánea</i> por métodos locales (Pix, tarjeta, cripto o transferencia según tu país).\n\n` +
-    `¿Tuviste alguna duda o quieres que te ayude a completarlo?`
+    `Aprovecha las entradas de la sesión de hoy.`
   ],
   botoesFollowUpSemDeposito1: [
     [{ text: '💳 Ver métodos de pago', callback_data: 'faq_metodos' }],
@@ -476,13 +484,13 @@ export const mensagens = {
     [{ text: '🔄 Ya deposité (Verificar)', callback_data: 'check_deposit_now' }]
   ],
   followUpSemDeposito2: (nome, brokerId) => [
-    `¡Hola de nuevo, ${nome}! Te escribo directo porque tengo tu plaza reservada en el sistema con el ID <code>${brokerId}</code> 🔒`,
-    `Apenas fondees tu cuenta con cualquier monto mínimo, tu saldo queda 100% para ti y la herramienta te queda <b>activada por 2 Meses (60 Días) en Modo Real</b> 🚀`,
-    `¿Tienes alguna duda o quieres que te ayude a fondear para que arranques hoy mismo?`
+    `El mercado no espera a los indecisos, ${nome}. Las mejores entradas del par EUR/USD se están dando ahora mismo.`,
+    `Tengo tu plaza reservada en el servidor con el ID <code>${brokerId}</code>. Fondea los <b>$10 USD mínimos</b> en B2 Trading y el sistema te asciende a <b>VIP REAL (60 Días)</b> de inmediato 🚀\n\n` +
+    `¿Lo vas a operar hoy o descarto tu registro?`
   ],
   botoesFollowUpSemDeposito2: [
     [{ text: '💳 ¿Cómo hago el depósito?', callback_data: 'faq_metodos' }],
     [{ text: '🔄 Ya lo hice, verificar', callback_data: 'check_deposit_now' }],
-    [{ text: '❓ Tengo una pregunta', callback_data: 'menu_dudas' }]
+    [{ text: '❓ Centro de Dudas', callback_data: 'menu_dudas' }]
   ]
 };

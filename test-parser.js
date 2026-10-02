@@ -102,10 +102,10 @@ test('Copywriting Mensagens: Follow-ups estratégicos estão configurados com to
   assert.ok(fuSemId2.some(m => m.includes('fórmulas mágicas')));
   assert.strictEqual(mensagens.botoesFollowUpSemId2('https://link.com').length, 2);
 
-  // Follow-up Sem Depósito 1 (Acesso vitalício qualquer valor)
+  // Follow-up Sem Depósito 1 (Status VIP Real 60 dias)
   const fuSemDep1 = mensagens.followUpSemDeposito1('Carlos', '849302');
   assert.ok(Array.isArray(fuSemDep1));
-  assert.ok(fuSemDep1.some(m => m.includes('VITALICIA')));
+  assert.ok(fuSemDep1.some(m => m.includes('VIP REAL')));
 
   // Follow-up Sem Depósito 2 (Reserva de plaza VIP)
   const fuSemDep2 = mensagens.followUpSemDeposito2('Carlos', '849302');
@@ -161,22 +161,26 @@ test('Funil em 2 Etapas: Mensagens de ativação Demo e Upgrade VIP Real estão 
   assert.ok(upReal.includes('VIP REAL'));
   assert.ok(upReal.includes('2 MESES DE ACCESO VIP'));
 
-  // 5. Follow-ups do pipeline Demo em 4 etapas
+  // 5. Follow-ups do pipeline Demo em 4 etapas (Hardened Persona + $10 USD Mínimo)
   const fuDemo1 = mensagens.followUpDemoInstalacao('Carlos');
-  assert.ok(fuDemo1.some(m => m.includes('Infiltrus en tu Chrome')));
+  assert.ok(fuDemo1.some(m => m.includes('extensión en tu Chrome')));
   assert.ok(mensagens.botoesFollowUpDemoInstalacao.length >= 2);
 
   const fuDemo2 = mensagens.followUpDemoTeste('Carlos');
-  assert.ok(fuDemo2.some(m => m.includes('dinero fantasma')));
+  assert.ok(fuDemo2.some(m => m.includes('monopoly') && m.includes('$10 USD')));
   assert.ok(mensagens.botoesFollowUpDemoTeste().length >= 2);
 
   const fuDemo3 = mensagens.followUpDemoConversaoReal('Carlos', '849302');
-  assert.ok(fuDemo3.some(m => m.includes('$38 USD')));
+  assert.ok(fuDemo3.some(m => m.includes('$38 USD') && m.includes('$10 USD')));
   assert.ok(mensagens.botoesFollowUpDemoConversaoReal().length >= 1);
 
   const fuDemo4 = mensagens.followUpDemoUltimoLlamado('Carlos', '849302');
-  assert.ok(fuDemo4.some(m => m.includes('período de prueba Demo')));
+  assert.ok(fuDemo4.some(m => m.includes('disciplina de ejecutar') && m.includes('$10')));
   assert.ok(mensagens.botoesFollowUpDemoUltimoLlamado().length >= 1);
+
+  // 6. Script de Reativação Dura direto
+  const fuDura = mensagens.reativacaoDura('Carlos', '849302');
+  assert.ok(fuDura.some(m => m.includes('disciplina de ejecutar')));
 });
 
 test('Database: Gerenciamento dos estados DEMO_ACTIVE e VIP_REAL', () => {

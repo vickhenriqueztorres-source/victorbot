@@ -72,7 +72,7 @@ O bot conta com um motor em background que roda a cada 2 minutos e recupera lead
 
 ### 1. Menu Interativo com Botões Inline
 Disponível em todas as etapas através do botão **`❓ Tengo una duda / Preguntas`**:
-- 💵 **¿Cuánto es el depósito mínimo?** (Explica que qualquer valor a partir de ~$5 ativa o software VITALÍCIO de presente).
+- 💵 **¿Cuánto es el depósito mínimo?** (Explica que qualquer valor a partir de ~$10 USD ativa o software VITALÍCIO de presente).
 - 💳 **¿Qué métodos de pago aceptan?** (Pix imediato, cartões Visa/Mastercard, transferências bancárias locais, cripto/USDT).
 - 📱 **¿Funciona en Celular o solo en PC?** (PC nativo no Chrome/Brave/Edge e Celular Android via Kiwi Browser).
 - 💎 **¿Por qué es Gratis y Vitalicio?** (Parceria oficial com a corretora, zero mensalidade, o saldo é 100% do trader).
