@@ -19,17 +19,17 @@ export const mensagens = {
   // 1. BIENVENIDA (Enviada en 3 mensajes cortos y pausados para máxima naturalidad)
   // --------------------------------------------------------------------------
   boasVindas: (nome) => [
-    // Mensaje 1A: Saludo cálido y directo
-    `¡Hola, ${nome}! Qué bueno saludarte por acá 😊\n\n` +
-    `Soy <b>${config.personaName}</b>. Bienvenido al equipo oficial de <i>Infiltrus</i>.`,
+    // Mensaje 1A: Saludo directo
+    `¡Hola, ${nome}! Soy <b>${config.personaName}</b>.\n` +
+    `Bienvenido al equipo oficial de <i>Infiltrus</i> 🎯`,
 
-    // Mensaje 1B: Gancho persuasivo - Fácil, rápido y sin rodeos
-    `Mira, empezar es <b>súper fácil y rápido</b>: en menos de <i>2 minutos</i> vas a tener el sistema conectado a tu pantalla para copiar las señales en vivo 🎯\n\n` +
-    `<i>(Sin gráficos enredados ni cursos largos... el algoritmo te indica exactamente cuándo entrar)</i>`,
+    // Mensaje 1B: Gancho persuasivo y sin rodeos
+    `Aquí no perdemos el tiempo con teoría inútil ni cursos de 40 horas.\n\n` +
+    `En <b>menos de 2 minutos</b> vas a tener el algoritmo conectado en tu pantalla filtrando entradas institucionales con <i>ventaja matemática</i> 📈`,
 
     // Mensaje 1C: Pregunta directa y llamada a la acción
-    `Para activarte tu <b>acceso VIP gratuito</b> hoy mismo:\n\n` +
-    `¿Ya tienes tu cuenta creada en el broker oficial o <i>todavía necesitas el enlace</i>?`
+    `Para activarte tu <b>acceso oficial</b> hoy mismo:\n\n` +
+    `¿Ya tienes tu cuenta en B2 Trading o <i>necesitas el enlace para registrarte</i>?`
   ],
 
   // Botones interactivos debajo del mensaje de bienvenida
@@ -43,14 +43,16 @@ export const mensagens = {
   // 2. ENVÍO DEL ENLACE DE REGISTRO (Cuando hace clic en "Necesito el enlace oficial")
   // --------------------------------------------------------------------------
   enviarLinkCadastro: (nome, linkAfiliado) => [
-    `Aquí tienes el enlace oficial:\n\n` +
+    `Aquí tienes tu enlace oficial:\n\n` +
     `👉 <b><a href="${linkAfiliado}">CLIC AQUÍ PARA REGISTRARTE EN B2 TRADING</a></b>\n\n` +
-    `Te toma literalmente 45 segundos:\n` +
+    `Te toma literalmente <b>45 segundos</b>:\n` +
     `1️⃣ Abre el enlace y regístrate con tu correo.\n` +
-    `2️⃣ Copia tu número de <b>ID</b> (arriba en el menú de tu perfil).\n` +
-    `3️⃣ Envíamelo por este chat para vincular tu licencia de inmediato. 🚀`,
+    `2️⃣ Copia tu número de <b>ID</b> <i>(arriba en tu perfil)</i>.\n` +
+    `3️⃣ Envíamelo por este chat para vincular tu licencia. 🚀`,
 
-    `El mercado no espera a los indecisos. Las mejores entradas del par EUR/USD se están dando ahora mismo. Abre tu enlace, copia tu ID y mándamelo ya.`
+    `<b>El mercado no espera a los indecisos.</b>\n` +
+    `Las mejores entradas del par EUR/USD se están dando ahora mismo.\n\n` +
+    `<i>Abre el enlace, copia tus 6 números de ID y mándamelos ya.</i>`
   ],
 
   botoesLinkCadastro: [
@@ -62,7 +64,7 @@ export const mensagens = {
   // 3. SOLICITAR ID DEL BROKER (Cuando hace clic en "Ya tengo cuenta creada")
   // --------------------------------------------------------------------------
   pedirIdCorretora: (nome) =>
-    `Excelente, ${nome}. Pásame por acá tu número de <b>ID de B2 Trading</b> (lo encuentras arriba en el menú de tu perfil).\n\n` +
+    `Excelente, ${nome}. Pásame por acá tu <b>ID de B2 Trading</b> <i>(está arriba en tu perfil)</i>.\n\n` +
     `En cuanto lo reciba, el sistema valida tu cuenta y te entrega tu archivo ZIP y tu clave criptográfica en el acto. 🎯`,
 
   botoesPedirId: [
@@ -81,23 +83,25 @@ export const mensagens = {
   // --------------------------------------------------------------------------
   confirmacaoIdLiberacaoDemo: (nome, brokerId) => [
     `¡Encontré tu registro perfectamente con el ID <code>${brokerId}</code>, ${nome}! 👏🎯`,
-    `¡Cumpliendo exactamente lo prometido! Te acabo de desbloquear tu <b>acceso oficial a Infiltrus</b> para que lo pruebes y lo compruebes tú mismo sin pagar un solo centavo 🚀`
+    `¡Cumpliendo lo prometido! Te acabo de desbloquear tu <b>acceso oficial a Infiltrus</b> para que lo pruebes y compruebes tú mismo sin pagar un solo centavo. 🚀`
   ],
 
   gerandoChaveDemo: () =>
     `Te estoy generando tu clave de acceso en este mismo instante, dame solo un segundito... 🔑`,
 
   entregaLicencaDemo: (nome, codigoLicenca, dias = 3, brokerId = '') =>
-    `¡ID ${brokerId ? `<code>${brokerId}</code> ` : ''}Vinculado con Éxito! 🎯\n\n` +
+    `🎯 <b>ID ${brokerId ? `<code>${brokerId}</code> ` : ''}VINCULADO CON ÉXITO</b>\n\n` +
     `Aquí tienes tu acceso oficial a Infiltrus:\n\n` +
     `🔑 <b>Tu Clave Demo (${dias * 24}h):</b>\n` +
     `<code>${codigoLicenca}</code>\n` +
-    `<i>(Toca la clave de arriba para copiarla al portapapeles)</i>\n\n` +
-    `📦 <b>Archivo de la Extensión:</b> (Archivo ZIP adjunto abajo)\n\n` +
-    `📌 <b>TU MISIÓN DE HOY (El Reto de los 3 Señales):</b>\n` +
-    `No abras operaciones a lo loco. Abre tu Chrome en B2 Trading, fija la extensión y espera únicamente las señales que tengan confirmación del Filtro de Volumen.\n\n` +
-    `Haz 2 o 3 operaciones en la cuenta Demo. Cuando veas cómo reacciona el algoritmo en el gráfico de 1 minuto, regresa aquí y dime cuántas ganaste. 🚀\n\n` +
-    `👇 <b>Mira el video tutorial de 1 minuto para instalarla:</b>\n` +
+    `<i>(Toca la clave para copiarla)</i>\n\n` +
+    `📦 <b>Archivo de la Extensión:</b> <i>(ZIP adjunto abajo)</i>\n\n` +
+    `───────────────\n` +
+    `📌 <b>EL RETO DE LOS 3 SEÑALES (Misión):</b>\n` +
+    `1️⃣ Abre Chrome en B2 Trading y fija la extensión.\n` +
+    `2️⃣ Espera únicamente señales con confirmación de <b>Filtro de Volumen</b>.\n` +
+    `3️⃣ Haz 2 o 3 operaciones en Demo y regresa a decirme cuántas ganaste 🚀\n\n` +
+    `📺 <b>Video de Instalación (1 minuto):</b>\n` +
     `${config.tutorialVideoUrl || 'https://youtu.be/_-3dLIXNchg?si=St8-h6nT8S_NO3O4'}`,
 
   desafioDemo: () =>
@@ -246,11 +250,11 @@ export const mensagens = {
   // 12.3 Duda: Gratis / Vitalicio
   dudaVitalicio: (nome) => [
     `💎 <b>¿Por qué el software es GRATIS y VITALICIO? ¿Dónde está el truco?</b>\n\n` +
-    `¡Cero trucos ni letras chicas, ${nome}! Te cuento con total transparencia:\n\n` +
+    `¡Cero trucos ni letras chicas, ${nome}!\n\n` +
     `Nosotros tenemos una alianza directa con el broker oficial como desarrolladores de software. A mí no me interesa cobrarte suscripciones de $50 o $100 dólares al mes ni venderte cursos teóricos enredados.`,
 
-    `Al registrarte con mi enlace oficial y activar tu cuenta con saldo para tus propias operaciones, el broker nos reconoce la afiliación y a ti te libero la herramienta con <b>ACCESO VITALICIO</b> 🎯\n\n` +
-    `👉 <b>Tu dinero no me lo pagas a mí</b>: queda 100% en tu cuenta para que copies las señales y retires tus ganancias cuando quieras.`
+    `Al registrarte con mi enlace oficial y fondear tu saldo para tus propias operaciones, el broker nos reconoce la alianza y a ti te libero la herramienta con <b>ACCESO VITALICIO</b> 🎯\n\n` +
+    `👉 <b>Tu dinero no me lo pagas a mí</b>: queda <i>100% en tu cuenta</i> para copiar las señales y retirar tus ganancias cuando quieras.`
   ],
 
   botoesDudaVitalicio: [
@@ -262,11 +266,11 @@ export const mensagens = {
   dudaDispositivos: (nome) => [
     `📱 <b>¿Se puede usar en Celular o solo en Computadora / Laptop?</b>\n\n` +
     `💻 <b>En Computadora o Laptop:</b>\n` +
-    `Funciona perfecto y de manera nativa en <b>Google Chrome, Brave, Edge u Opera</b>. Es la forma más cómoda porque tienes la máxima velocidad para ejecutar las señales en M1 al instante ⚡`,
+    `Funciona perfecto y de manera nativa en <b>Google Chrome, Brave, Edge u Opera</b>. Es la forma más rápida y recomendada para ejecutar en M1 ⚡`,
 
     `📱 <b>En Celular (Android):</b>\n` +
-    `¡También se puede! Solo necesitas descargar desde la Play Store un navegador compatible con extensiones (como <b>Kiwi Browser</b> o <b>Yandex Browser</b>), cargas la extensión y listo.\n\n` +
-    `<i>(En cuanto te entregue tu clave VIP, te paso el archivo y te ayudo a instalarla en el dispositivo que prefieras)</i> 😊`
+    `¡También se puede! Descargas desde Play Store un navegador compatible con extensiones (como <b>Kiwi Browser</b> o <b>Yandex Browser</b>), cargas el ZIP y listo.\n\n` +
+    `<i>(En cuanto te entregue tu clave VIP, te paso el archivo y te ayudo a instalarla)</i> 🎯`
   ],
 
   botoesDudaDispositivos: [
@@ -279,10 +283,10 @@ export const mensagens = {
     `🔒 <b>¿Cómo retiro mis ganancias y qué tan seguro es?</b>\n\n` +
     `¡Tu dinero está <b>100% seguro y bajo tu propio control</b>, ${nome}!\n\n` +
     `1️⃣ La plataforma opera bajo estándares internacionales y cuenta con miles de traders activos a diario.\n` +
-    `2️⃣ Puedes solicitar el retiro de tus ganancias y de tu capital <b>en cualquier momento</b>, sin trabas ni plazos mínimos de permanencia.\n` +
-    `3️⃣ Los pagos se procesan directamente a tu cuenta bancaria, billetera virtual o wallet cripto que tú mismo elijas.`,
+    `2️⃣ Solicitas el retiro de tus ganancias <b>en cualquier momento</b>, sin plazos mínimos ni trabas.\n` +
+    `3️⃣ Los pagos se procesan directo a tu <b>cuenta bancaria, Pix o wallet cripto</b>.`,
 
-    `Tú eres el único dueño de tu saldo. Infiltrus es solo la herramienta inteligente que te marca las mejores entradas para ganar 📈`
+    `<i>Tú eres el único dueño de tu saldo. Infiltrus es la herramienta inteligente que te marca las mejores entradas para ganar.</i> 📈`
   ],
 
   botoesDudaRetiros: [
@@ -292,11 +296,11 @@ export const mensagens = {
 
   // 12.6 Duda: Dónde encuentro mi ID
   dudaDondeId: () => [
-    `🆔 <b>¿Cómo encontrar tu ID del Broker en 10 segundos?</b>\n\n` +
-    `1️⃣ Inicia sesión en el broker desde tu computadora o teléfono.\n` +
-    `2️⃣ En la esquina superior (donde aparece tu foto o perfil), toca sobre el menú.\n` +
-    `3️⃣ Vas a ver un número de entre 5 y 9 dígitos al lado de tu nombre: ese es tu <b>ID</b> 🔢\n\n` +
-    `Cópialo y pégalo por acá en el chat para que el sistema te reconozca de una vez.`
+    `🆔 <b>Cómo encontrar tu ID del Broker en 10 segundos:</b>\n\n` +
+    `1️⃣ Inicia sesión en <b>B2 Trading</b> desde tu PC o teléfono.\n` +
+    `2️⃣ En la esquina superior, toca sobre el menú de tu <b>Perfil</b>.\n` +
+    `3️⃣ Vas a ver un número de entre 5 y 9 dígitos: ese es tu <b>ID</b> 🔢\n\n` +
+    `<i>Cópialo y pégalo por acá en el chat para que el sistema te vincule de una vez.</i>`
   ],
 
   botoesDudaDondeId: [
@@ -315,9 +319,12 @@ export const mensagens = {
     `🚀 <b>¿Cómo activar tu Cuenta Real para retirar ganancias al banco?</b>\n\n` +
     `Es directo al grano, ${nome}. En cuanto decidas dejar de jugar monopoly en Demo y hacer dinero real:\n\n` +
     `1️⃣ Abre el broker y entra a la sección <b>Depósito / Cajero</b>.\n` +
-    `2️⃣ Selecciona tu método preferido (Pix, tarjeta, transferencia local o cripto/Binance Pay).\n` +
-    `3️⃣ Fondea tu cuenta con el depósito mínimo de <b>$15 USD</b> (o equivalente en tu moneda local).\n\n` +
-    `💡 <b>Recuerda:</b> Todo el saldo es <b>100% tuyo</b> para operar y retirar cuando quieras. A mí no me pagas nada: recibes <b>2 MESES COMPLETOS (60 DÍAS)</b> de acceso VIP oficial para operar y el bot te asciende a <b>VIP REAL</b> de inmediato 🎯`
+    `2️⃣ Selecciona tu método preferido <i>(Pix, tarjeta, transferencia local o cripto/Binance Pay)</i>.\n` +
+    `3️⃣ Fondea tu cuenta con el depósito mínimo de <b>$15 USD</b> <i>(o equivalente local)</i>.`,
+
+    `💡 <b>RECUERDA:</b>\n` +
+    `Todo el saldo es <b>100% tuyo</b> para operar y retirar cuando quieras.\n\n` +
+    `A mí no me pagas nada: recibes <b>2 MESES COMPLETOS (60 DÍAS)</b> de acceso VIP oficial para operar y el bot te asciende a <b>VIP REAL</b> de inmediato 🎯`
   ],
 
   botoesDudaComoReal: [
@@ -389,11 +396,15 @@ export const mensagens = {
 
   // Caso A2: Pidió el link o inició, sigue sin enviar ID (+4 horas tras F1 - Postura e Filtro de Ejecutores)
   followUpSemId2: (nome, linkAfiliado = config.brokerAffiliateUrl) => [
-    `No opero con gente que busca fórmulas mágicas sin mover un dedo.\n\n` +
-    `Crear tu cuenta en B2 Trading toma literalmente 45 segundos y $0 pesos. Si ni siquiera tienes la iniciativa de abrir un enlace y copiar 6 números de ID, entonces Infiltrus no te va a servir de nada. Las herramientas automáticas son para los que ejecutan, no para los que miran desde afuera.\n\n` +
-    `El archivo ZIP con la extensión y tu clave personalizada están listos en este chat.\n\n` +
+    `No opero con gente que busca <b>fórmulas mágicas</b> sin mover un dedo.\n\n` +
+    `Crear tu cuenta en B2 Trading toma literalmente <b>45 segundos</b> y <i>$0 pesos</i>.`,
+
+    `Si ni siquiera tienes la iniciativa de abrir un enlace y copiar 6 números de ID, entonces <b>Infiltrus no te va a servir de nada</b>.\n\n` +
+    `Las herramientas automáticas son para los que <b>ejecutan</b>, no para los que miran desde afuera.`,
+
+    `El archivo ZIP con la extensión y tu clave personalizada <i>están listos en este chat</i>.\n\n` +
     `¿Lo vas a usar para operar la sesión de hoy o descarto tu registro?\n\n` +
-    `Regístrate aquí y manda tu ID: <a href="${linkAfiliado}">Registrarme en B2 Trading</a>`
+    `👉 <b><a href="${linkAfiliado}">Regístrate aquí en B2 Trading</a></b> y manda tu ID:`
   ],
 
   botoesFollowUpSemId2: (linkAfiliado = config.brokerAffiliateUrl) => [
@@ -401,14 +412,14 @@ export const mensagens = {
     [{ text: '✍️ Enviar mi ID de 6 dígitos', callback_data: 'has_account' }]
   ],
 
-  // Caso B1: Recibió la extensión Demo (+45 min - Check de Micro-vitória Demo)
   // Caso B1: Recibió la extensión Demo (+45 min - Postura Trader: Instalación Inmediata)
   followUpDemoInstalacao: (nome) => [
-    `Si todavía no fijaste la extensión en tu Chrome, estás regalándole dinero a la corretora.\n\n` +
-    `Instalarla te toma literalmente 60 segundos. Mira el video tutorial y déjala lista para operar:\n` +
-    `${config.tutorialVideoUrl || 'https://youtu.be/_-3dLIXNchg?si=St8-h6nT8S_NO3O4'}\n\n` +
-    `En cuanto la fijes, vas a ver las confirmaciones de entrada sobre el gráfico de B2 Trading. 🎯\n\n` +
-    `El mercado no espera a nadie. Déjala lista ahora mismo.`
+    `Si todavía no fijaste la <b>extensión en tu Chrome</b>, estás regalándole dinero a la corretora.\n\n` +
+    `Instalarla te toma literalmente <b>60 segundos</b>. Mira el video tutorial y déjala lista para operar:\n` +
+    `${config.tutorialVideoUrl || 'https://youtu.be/_-3dLIXNchg?si=St8-h6nT8S_NO3O4'}`,
+
+    `En cuanto la fijes, vas a ver las <b>confirmaciones de entrada</b> sobre el gráfico de B2 Trading. 🎯\n\n` +
+    `<i>El mercado no espera a nadie.</i> Déjala lista ahora mismo.`
   ],
 
   botoesFollowUpDemoInstalacao: [
@@ -420,10 +431,13 @@ export const mensagens = {
   // Caso B2: Demo instalada (+3 horas tras Demo 1 - "El Dinero Fantasma" / Postura Ejecución)
   followUpDemoTeste: (nome) => [
     `Pregunta rápida: ¿cuántas operaciones ganaste hoy en la Demo? 👀\n\n` +
-    `Seguramente viste crecer ese saldo ficticio. Pero hablemos claro:\n\n` +
-    `Ganar en la demo es jugar monopoly. No paga el alquiler, no compra comida ni te da libertad. Es dinero de fantasía.\n\n` +
-    `El algoritmo ya te demostró de lo que es capaz en tu propia pantalla. La única diferencia entre tú y los traders que están retirando ganancias a su cuenta bancaria es que ellos operan en cuenta Real. 💰\n\n` +
-    `Si estás listo para hacer dinero real de verdad, el mínimo son $15 USD. Tú decides si sigues jugando de espectador o ejecutas como trader profesional.`
+    `Seguramente viste crecer ese saldo, pero hablemos claro:\n\n` +
+    `<b>Ganar en la demo es jugar monopoly.</b>\n` +
+    `<i>No paga el alquiler, no compra comida ni te da libertad.</i> Es dinero de fantasía.`,
+
+    `El algoritmo ya te demostró de lo que es capaz en tu propia pantalla. La única diferencia entre tú y los traders que <b>retiran ganancias a diario</b> es que ellos operan en <b>Cuenta Real</b>. 💰\n\n` +
+    `Si estás listo para hacer dinero real de verdad, el mínimo son <b>$15 USD</b>.\n\n` +
+    `<i>Tú decides si sigues jugando de espectador o ejecutas como trader profesional.</i>`
   ],
 
   botoesFollowUpDemoTeste: (linkAfiliado = config.brokerAffiliateUrl) => [
@@ -433,16 +447,17 @@ export const mensagens = {
 
   // Caso B3: Conversión Natural a Cuenta Real (+12 horas tras Demo 2 - Prova de Saque Carlos)
   followUpDemoConversaoReal: (nome, brokerId, linkAfiliado = config.brokerAffiliateUrl) => [
-    `Esto fue lo que hizo Carlos (uno de nuestros miembros) hoy:\n\n` +
-    `Inició con un depósito de solo $15 USD esta mañana.\n` +
-    `Siguió 4 señales de Infiltrus con gestión 2x1.\n` +
-    `Cerró su sesión con <b>$38 USD</b> y acaba de solicitar su retiro a Binance. 💸\n\n` +
+    `Esto fue lo que hizo <b>Carlos</b> (uno de nuestros miembros) hoy:\n\n` +
+    `• Inició con un depósito de solo <b>$15 USD</b> esta mañana.\n` +
+    `• Siguió <b>4 señales</b> de Infiltrus con gestión 2x1.\n` +
+    `• Cerró su sesión con <b>$38 USD</b> y acaba de solicitar su retiro a Binance. 💸`,
+
     `Los <b>$15 USD</b> de depósito mínimo no son para mí ni para pagar la herramienta (la extensión sigue siendo <b>GRATIS</b>). Es <b>TU capital de trabajo</b>. Sigue estando 100% en tu poder para multiplicarlo y retirarlo cuando quieras.\n\n` +
-    `Al hacer tu primer depósito de $15 USD hoy:\n` +
-    `✅ Tu licencia se extiende automáticamente a <b>60 Días VIP</b>\n` +
-    `✅ Acceso a la configuración de Máxima Asertividad M1\n` +
+    `Al hacer tu primer depósito de $15 USD hoy desbloqueas:\n` +
+    `✅ <b>Licencia extendida a 60 Días VIP</b>\n` +
+    `✅ Configuración de Máxima Asertividad M1\n` +
     `✅ Plantilla de Gestión de Riesgo Blindada\n\n` +
-    `Toca abajo, deposita tus $15 USD y el bot actualizará tu clave en el acto: 👇`
+    `👇 <i>Toca abajo, deposita tus $15 USD y el bot actualizará tu clave en el acto:</i>`
   ],
 
   botoesFollowUpDemoConversaoReal: (linkAfiliado = config.brokerAffiliateUrl) => [
@@ -451,15 +466,16 @@ export const mensagens = {
 
   // Caso B4: Reativação Dura / Último Chamado (Para quem travou após instalar - Postura Trader de Elite)
   followUpDemoUltimoLlamado: (nome, brokerId, linkAfiliado = config.brokerAffiliateUrl) => [
-    `Te voy a decir algo que ningún "guru" de YouTube te va a decir:\n\n` +
-    `Tener la mejor herramienta instalada en tu Chrome no te va a hacer ganar dinero si no tienes la disciplina de ejecutar.\n\n` +
-    `Infiltrus ya te marcó dónde entrar. Si te da miedo arriesgar $15 dólares en el mercado real, entonces el trading no es para ti y es mejor que te dediques a otra cosa.\n\n` +
-    `Pero si quieres operar con ventaja matemática y dejar de perder por culpa de indicadores viejos:\n\n` +
-    `1. Deposita los $15 mínimos en B2.\n` +
-    `2. Entra a las sesiones VIP con nosotros.\n` +
-    `3. Retira tus primeras ganancias esta misma semana.\n\n` +
-    `La puerta de la sala VIP se cierra hoy a medianoche.\n\n` +
-    `👉 <a href="${linkAfiliado}"><b>Clic aquí para Depositar $15 y Activar VIP</b></a>`
+    `Te voy a decir algo que ningún <i>"guru"</i> de YouTube te va a decir:\n\n` +
+    `Tener la mejor herramienta en tu Chrome no te va a hacer ganar dinero si no tienes la <b>disciplina de ejecutar</b>.\n\n` +
+    `Infiltrus ya te marcó dónde entrar. Si te da miedo arriesgar <b>$15 dólares</b> en el mercado real, entonces <i>el trading no es para ti</i> y es mejor que te dediques a otra cosa.`,
+
+    `Pero si quieres operar con <b>ventaja matemática</b> y dejar de perder por culpa de indicadores viejos:\n\n` +
+    `1️⃣ Deposita los <b>$15 mínimos</b> en B2.\n` +
+    `2️⃣ Entra a las sesiones VIP con nosotros.\n` +
+    `3️⃣ Retira tus primeras ganancias esta misma semana.\n\n` +
+    `⏳ <i>La puerta de la sala VIP se cierra hoy a medianoche.</i>\n\n` +
+    `👉 <b><a href="${linkAfiliado}">Clic aquí para Depositar $15 y Activar VIP</a></b>`
   ],
 
   botoesFollowUpDemoUltimoLlamado: (linkAfiliado = config.brokerAffiliateUrl) => [
@@ -474,9 +490,10 @@ export const mensagens = {
   // Compatibilidad con llamadas legacy
   followUpSemDeposito1: (nome, brokerId) => [
     `¡Hola, ${nome}! ¿Pudiste calibrar tus señales en Demo o entrar a fondear tu cuenta?`,
-    `Te recuerdo que no necesitas poner mucho para operar en real: con el mínimo de <b>$15 USD</b> ya se te desbloquea la membresía en <b>STATUS VIP REAL (60 DÍAS COMPLETOS)</b> 🎯`,
-    `Además, la acreditación es <i>instantánea</i> por métodos locales (Pix, tarjeta, cripto o transferencia según tu país).\n\n` +
-    `Aprovecha las entradas de la sesión de hoy.`
+
+    `Te recuerdo que no necesitas poner mucho para operar en real: con el mínimo de <b>$15 USD</b> ya se te desbloquea la membresía en <b>STATUS VIP REAL (60 DÍAS COMPLETOS)</b> 🎯\n\n` +
+    `La acreditación es <i>instantánea</i> por métodos locales (Pix, tarjeta, cripto o transferencia según tu país).\n\n` +
+    `<i>Aprovecha las entradas de la sesión de hoy.</i>`
   ],
   botoesFollowUpSemDeposito1: [
     [{ text: '💳 Ver métodos de pago', callback_data: 'faq_metodos' }],
@@ -484,9 +501,12 @@ export const mensagens = {
     [{ text: '🔄 Ya deposité (Verificar)', callback_data: 'check_deposit_now' }]
   ],
   followUpSemDeposito2: (nome, brokerId) => [
-    `El mercado no espera a los indecisos, ${nome}. Las mejores entradas del par EUR/USD se están dando ahora mismo.`,
-    `Tengo tu plaza reservada en el servidor con el ID <code>${brokerId}</code>. Fondea los <b>$15 USD mínimos</b> en B2 Trading y el sistema te asciende a <b>VIP REAL (60 Días)</b> de inmediato 🚀\n\n` +
-    `¿Lo vas a operar hoy o descarto tu registro?`
+    `<b>El mercado no espera a los indecisos, ${nome}.</b>\n\n` +
+    `Las mejores entradas del par EUR/USD se están dando ahora mismo.`,
+
+    `Tengo tu plaza reservada en el servidor con el ID <code>${brokerId}</code>.\n\n` +
+    `Fondea los <b>$15 USD mínimos</b> en B2 Trading y el sistema te asciende a <b>VIP REAL (60 Días)</b> de inmediato 🚀\n\n` +
+    `<i>¿Lo vas a operar hoy o descarto tu registro?</i>`
   ],
   botoesFollowUpSemDeposito2: [
     [{ text: '💳 ¿Cómo hago el depósito?', callback_data: 'faq_metodos' }],

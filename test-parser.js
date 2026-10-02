@@ -167,7 +167,7 @@ test('Funil em 2 Etapas: Mensagens de ativação Demo e Upgrade VIP Real estão 
   assert.ok(mensagens.botoesFollowUpDemoInstalacao.length >= 2);
 
   const fuDemo2 = mensagens.followUpDemoTeste('Carlos');
-  assert.ok(fuDemo2.some(m => m.includes('monopoly') && m.includes('$15 USD')));
+  assert.ok(fuDemo2.some(m => m.includes('monopoly')) && fuDemo2.some(m => m.includes('$15 USD')));
   assert.ok(mensagens.botoesFollowUpDemoTeste().length >= 2);
 
   const fuDemo3 = mensagens.followUpDemoConversaoReal('Carlos', '849302');
