@@ -49,6 +49,9 @@ export const config = {
   // Link oficial de afiliado da corretora para cadastro dos novos clientes
   brokerAffiliateUrl: process.env.BROKER_AFFILIATE_URL || 'https://b2trading.com/register?ref=infiltrus',
 
+  // Link oficial do vídeo tutorial de instalação no YouTube
+  tutorialVideoUrl: process.env.TUTORIAL_VIDEO_URL || 'https://youtu.be/_-3dLIXNchg?si=St8-h6nT8S_NO3O4',
+
   // Identidade humanizada do Bot
   personaName: process.env.PERSONA_NAME || 'Victor',
   personaRole: process.env.PERSONA_ROLE || 'Mentor Infiltrus',

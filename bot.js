@@ -135,7 +135,7 @@ async function deliverAccessToUser(chatId, clientName, brokerId, plan = 'DEMO VI
   await simulateTyping(chatId, 2200);
   const licenseMsg = isRealVip
     ? mensagens.entregaLicenca(name, license.code, license.durationDays, license.plan)
-    : mensagens.entregaLicencaDemo(name, license.code, license.durationDays, license.plan);
+    : mensagens.entregaLicencaDemo(name, license.code, license.durationDays, brokerId);
   try {
     await api.sendMessage(chatId, licenseMsg);
   } catch (err) {
@@ -156,24 +156,14 @@ async function deliverAccessToUser(chatId, clientName, brokerId, plan = 'DEMO VI
     }
   }
 
-  // 5. Envia o tutorial passo a passo de instalação no Chrome
-  await simulateTyping(chatId, 2000);
-  const guideMsg = mensagens.guiaInstalacao();
-  try {
-    await api.sendMessage(chatId, guideMsg);
-  } catch (err) {
-    console.error(`[AVISO] Falha ao enviar guia de instalação para ${chatId}:`, err.message);
-  }
-
-  // 6. Se for ativação DEMO, envia o Desafio Demo de 2 a 3 sinais com botões interativos
+  // 5. Se for ativação DEMO, envia botões de ação com link do vídeo e suporte
   if (!isRealVip) {
-    await simulateTyping(chatId, 2000);
-    const desafioMsg = mensagens.desafioDemo();
+    await simulateTyping(chatId, 1600);
     const keyboard = { inline_keyboard: mensagens.botoesEntregaDemo };
     try {
-      await api.sendMessage(chatId, desafioMsg, { reply_markup: keyboard });
+      await api.sendMessage(chatId, `👇 <b>Acciones Rápidas:</b>\nToca abajo para ver el video tutorial o resolver cualquier duda:`, { reply_markup: keyboard });
     } catch (err) {
-      console.error(`[AVISO] Falha ao enviar desafio demo para ${chatId}:`, err.message);
+      console.error(`[AVISO] Falha ao enviar botões demo para ${chatId}:`, err.message);
     }
   }
 
@@ -341,19 +331,19 @@ async function handlePrivateMessage(msg) {
       } else if (typeNum === '3') {
         const text = mensagens.followUpDemoInstalacao(name);
         await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpDemoInstalacao } });
-        return api.sendMessage(chatId, `✅ Follow-up Demo 1 (Instalação) disparado para ${name}!`);
+        return api.sendMessage(chatId, `✅ Follow-up Demo 1 (Micro-Vitória Demo) disparado para ${name}!`);
       } else if (typeNum === '4') {
         const text = mensagens.followUpDemoTeste(name);
-        await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpDemoTeste } });
-        return api.sendMessage(chatId, `✅ Follow-up Demo 2 (Validação Sinais) disparado para ${name}!`);
+        await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpDemoTeste(config.brokerAffiliateUrl) } });
+        return api.sendMessage(chatId, `✅ Follow-up Demo 2 (Dinheiro Fantasma) disparado para ${name}!`);
       } else if (typeNum === '5') {
-        const text = mensagens.followUpDemoConversaoReal(name, brokerId);
-        await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpDemoConversaoReal } });
-        return api.sendMessage(chatId, `✅ Follow-up Demo 3 (Ponte Real $5 USD) disparado para ${name}!`);
+        const text = mensagens.followUpDemoConversaoReal(name, brokerId, config.brokerAffiliateUrl);
+        await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpDemoConversaoReal(config.brokerAffiliateUrl) } });
+        return api.sendMessage(chatId, `✅ Follow-up Demo 3 (Prova de Saque Carlos $5->$38) disparado para ${name}!`);
       } else if (typeNum === '6') {
-        const text = mensagens.followUpDemoUltimoLlamado(name, brokerId);
-        await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpDemoUltimoLlamado } });
-        return api.sendMessage(chatId, `✅ Follow-up Demo 4 (Último Chamado) disparado para ${name}!`);
+        const text = mensagens.followUpDemoUltimoLlamado(name, brokerId, config.brokerAffiliateUrl);
+        await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpDemoUltimoLlamado(config.brokerAffiliateUrl) } });
+        return api.sendMessage(chatId, `✅ Follow-up Demo 4 (Encerramento Cortesia / Escassez) disparado para ${name}!`);
       } else {
         return api.sendMessage(chatId, 'Uso correto: <code>/disparar_followup &lt;CHAT_ID&gt; &lt;1|2|3|4|5|6&gt;</code>');
       }
@@ -691,6 +681,18 @@ async function handleCallbackQuery(query) {
     };
     return sendHumanMessage(chatId, msg, { reply_markup: keyboard }, 1600);
   }
+
+  if (data === 'ver_comunidad') {
+    const msg = mensagens.resultadosComunidad(firstName);
+    const keyboard = {
+      inline_keyboard: [
+        [{ text: '💳 Depositar $5 y Activar VIP 60 Días', url: config.brokerAffiliateUrl }],
+        [{ text: '🔄 Ya deposité (Verificar)', callback_data: 'check_deposit_now' }],
+        [{ text: '⬅️ Volver', callback_data: 'faq_volver' }]
+      ]
+    };
+    return sendHumanMessage(chatId, msg, { reply_markup: keyboard }, 1600);
+  }
 }
 
 /**
@@ -792,7 +794,7 @@ async function checkAndSendFollowUps() {
               db.saveUser(userChatId, { followUps: user.followUps });
 
               const text = mensagens.followUpDemoTeste(user.firstName || 'amigo');
-              const keyboard = { inline_keyboard: mensagens.botoesFollowUpDemoTeste };
+              const keyboard = { inline_keyboard: mensagens.botoesFollowUpDemoTeste(config.brokerAffiliateUrl) };
               await sendHumanMessage(userChatId, text, { reply_markup: keyboard });
               continue;
             }
@@ -807,8 +809,8 @@ async function checkAndSendFollowUps() {
               user.followUps.demo_3 = new Date().toISOString();
               db.saveUser(userChatId, { followUps: user.followUps });
 
-              const text = mensagens.followUpDemoConversaoReal(user.firstName || 'amigo', user.brokerId);
-              const keyboard = { inline_keyboard: mensagens.botoesFollowUpDemoConversaoReal };
+              const text = mensagens.followUpDemoConversaoReal(user.firstName || 'amigo', user.brokerId, config.brokerAffiliateUrl);
+              const keyboard = { inline_keyboard: mensagens.botoesFollowUpDemoConversaoReal(config.brokerAffiliateUrl) };
               await sendHumanMessage(userChatId, text, { reply_markup: keyboard });
               continue;
             }
@@ -822,8 +824,8 @@ async function checkAndSendFollowUps() {
               user.followUps.demo_4 = new Date().toISOString();
               db.saveUser(userChatId, { followUps: user.followUps });
 
-              const text = mensagens.followUpDemoUltimoLlamado(user.firstName || 'amigo', user.brokerId);
-              const keyboard = { inline_keyboard: mensagens.botoesFollowUpDemoUltimoLlamado };
+              const text = mensagens.followUpDemoUltimoLlamado(user.firstName || 'amigo', user.brokerId, config.brokerAffiliateUrl);
+              const keyboard = { inline_keyboard: mensagens.botoesFollowUpDemoUltimoLlamado(config.brokerAffiliateUrl) };
               await sendHumanMessage(userChatId, text, { reply_markup: keyboard });
               continue;
             }

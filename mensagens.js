@@ -88,25 +88,31 @@ export const mensagens = {
   gerandoChaveDemo: () =>
     `Te estoy generando tu clave de acceso en este mismo instante, dame solo un segundito... 🔑`,
 
-  entregaLicencaDemo: (nome, codigoLicenca, dias = 3, plano = 'DEMO VIP') =>
-    `¡Listo, ${nome}! Tu herramienta está <b>100% activa</b> 🚀\n\n` +
-    `🔑 <b>Tu Clave de Acceso Demo:</b>\n` +
+  entregaLicencaDemo: (nome, codigoLicenca, dias = 3, brokerId = '') =>
+    `¡ID ${brokerId ? `<code>${brokerId}</code> ` : ''}Vinculado con Éxito! 🎯\n\n` +
+    `Aquí tienes tu acceso oficial a Infiltrus:\n\n` +
+    `🔑 <b>Tu Clave Demo (${dias * 24}h):</b>\n` +
     `<code>${codigoLicenca}</code>\n` +
     `<i>(Toca la clave de arriba para copiarla al portapapeles)</i>\n\n` +
-    `💎 <b>Plan:</b> ${plano || 'DEMO VIP'} (Motor Cuántico M1 Habilitado)\n` +
-    `⏳ <b>Vigencia:</b> ${dias} DÍAS DE PRUEBA COMPLETA (72 Horas)`,
+    `📦 <b>Archivo de la Extensión:</b> (Archivo ZIP adjunto abajo)\n\n` +
+    `📌 <b>TU MISIÓN DE HOY (El Reto de los 3 Señales):</b>\n` +
+    `No abras operaciones a lo loco. Abre tu Chrome en B2 Trading, fija la extensión y espera únicamente las señales que tengan confirmación del Filtro de Volumen.\n\n` +
+    `Haz 2 o 3 operaciones en la cuenta Demo. Cuando veas cómo reacciona el algoritmo en el gráfico de 1 minuto, regresa aquí y dime cuántas ganaste. 🚀\n\n` +
+    `👇 <b>Mira el video tutorial de 1 minuto para instalarla:</b>\n` +
+    `${config.tutorialVideoUrl || 'https://youtu.be/_-3dLIXNchg?si=St8-h6nT8S_NO3O4'}`,
 
   desafioDemo: () =>
-    `💡 <b>Tu primer paso recomendado (Tienes 72 Horas de Prueba Gratuita):</b>\n\n` +
-    `1️⃣ Abre tu broker en <b>Cuenta DEMO</b> (con saldo ficticio de prueba).\n` +
-    `2️⃣ Conéctale la extensión y deja que el motor matemático analice el mercado en vivo.\n` +
-    `3️⃣ Ejecuta tus primeras <b>2 a 3 señales</b> en M1 sin arriesgar ni un solo centavo de tu propio dinero.\n\n` +
-    `¡Tienes <b>3 días completos</b> para comprobar cómo clava las entradas! Avísame por acá en cuanto la tengas lista en pantalla 😊🎯`,
+    `📌 <b>TU MISIÓN DE HOY (El Reto de los 3 Señales):</b>\n\n` +
+    `1️⃣ Abre tu Chrome en B2 Trading y fija la extensión.\n` +
+    `2️⃣ Espera únicamente las señales con confirmación del Filtro de Volumen.\n` +
+    `3️⃣ Haz 2 o 3 operaciones en la cuenta Demo y dime cuántas ganaste. 🎯\n\n` +
+    `👇 <b>Mira el video tutorial de 1 minuto para instalarla:</b>\n` +
+    `${config.tutorialVideoUrl || 'https://youtu.be/_-3dLIXNchg?si=St8-h6nT8S_NO3O4'}`,
 
   botoesEntregaDemo: [
-    [{ text: '📖 ¿Cómo instalar la extensión?', callback_data: 'faq_instalar' }],
+    [{ text: '📺 Ver Video de Instalación', url: config.tutorialVideoUrl || 'https://youtu.be/_-3dLIXNchg?si=St8-h6nT8S_NO3O4' }],
     [{ text: '💳 Activar Cuenta Real ($5 USD)', callback_data: 'faq_como_real' }],
-    [{ text: '❓ Tengo una duda / Preguntas', callback_data: 'menu_dudas' }]
+    [{ text: '🆘 Necesito Ayuda / Soporte', callback_data: 'menu_dudas' }]
   ],
 
   // --------------------------------------------------------------------------
@@ -164,7 +170,9 @@ export const mensagens = {
   // 10. GUÍA PASO A PASO DE INSTALACIÓN EN GOOGLE CHROME
   // --------------------------------------------------------------------------
   guiaInstalacao: () =>
-    `📖 <b>Cómo instalar la extensión en 3 sencillos pasos en tu computadora:</b>\n\n` +
+    `📖 <b>Cómo instalar la extensión en Google Chrome en 1 minuto:</b>\n\n` +
+    `📺 <b>Video Tutorial Paso a Paso:</b>\n` +
+    `${config.tutorialVideoUrl || 'https://youtu.be/_-3dLIXNchg?si=St8-h6nT8S_NO3O4'}\n\n` +
     `1️⃣ Descarga el archivo <code>inflitrus-signals-cliente.zip</code> enviado arriba y descomprímelo en una carpeta de tu PC.\n` +
     `2️⃣ En tu navegador <b>Google Chrome</b>, abre la pestaña <code>chrome://extensions/</code> y activa la casilla <b>Modo de desarrollador</b> (arriba a la derecha).\n` +
     `3️⃣ Haz clic en el botón <b>Cargar descomprimida</b> y selecciona la carpeta que acabas de descomprimir.\n` +
@@ -322,7 +330,9 @@ export const mensagens = {
 
   // 12.9 Duda: Instalación en Chrome
   dudaInstalacion: () => [
-    `📖 <b>Cómo instalar la extensión en Google Chrome:</b>\n\n` +
+    `📖 <b>Cómo instalar la extensión en Google Chrome en 1 minuto:</b>\n\n` +
+    `📺 <b>Mira el video tutorial paso a paso:</b>\n` +
+    `${config.tutorialVideoUrl || 'https://youtu.be/_-3dLIXNchg?si=St8-h6nT8S_NO3O4'}\n\n` +
     `1️⃣ Descarga el archivo <code>inflitrus-signals-cliente.zip</code> enviado en este chat y descomprímelo en tu PC.\n` +
     `2️⃣ En Google Chrome, escribe <code>chrome://extensions/</code> en la barra de direcciones.\n` +
     `3️⃣ Activa el botón <b>Modo de desarrollador</b> (arriba a la derecha).\n` +
@@ -346,90 +356,112 @@ export const mensagens = {
     `¡De una, ${nome}! Tómate tu tiempo. Abre la extensión cuando estés frente a la pantalla y ejecuta 2 o 3 operaciones en saldo Demo para agarrarle el ritmo.\n\n` +
     `¡Cualquier duda que te surja me escribes directo por acá! 👍`,
 
+  // Prueba social de la comunidad para Follow-Up Demo 2
+  resultadosComunidad: (nome) => [
+    `📊 <b>Resultados de la Comunidad Infiltrus en Vivo:</b>\n\n` +
+    `Hoy en las sesiones de mercado:\n` +
+    `• Sesión M1 EUR/USD: 8 victorias / 1 derrota 🎯\n` +
+    `• Sesión M1 GBP/USD: 6 victorias / 0 derrotas 🔥\n` +
+    `• Retiros procesados hoy por el broker: <b>+$1,420 USD</b> a miembros VIP 💰\n\n` +
+    `Todos empezaron exactamente igual: probando en Demo y luego fondeando sus primeros <b>$5 USD</b> para activar su cuenta real y retirar ganancias.\n\n` +
+    `¿Listo para dar el paso a saldo real, ${nome}?`
+  ],
+
   // --------------------------------------------------------------------------
   // 13. MENSAJES DE FOLLOW-UP ESTRATÉGICOS (JORNADA DE ATIVACIÓN EM 2 ETAPAS)
   // --------------------------------------------------------------------------
 
-  // Caso A1: Pidió el link o inició, pero no envió ID (35-60 minutos de inactividad)
-  followUpSemId1: (nome) => [
-    `¡Hola, ${nome}! ¿Cómo vas con eso? 😊`,
-    `Quería consultarte rápido si pudiste abrir el enlace para crear tu cuenta o si te saltó alguna duda con la plataforma.`,
-    `Cualquier cosa avísame por acá que te doy una mano para dejarlo listo en <i>menos de 1 minuto</i> 👍`
+  // Caso A1: Pidió el link o inició, pero no envió ID (35 minutos de inactividad)
+  followUpSemId1: (nome, linkAfiliado = config.brokerAffiliateUrl) => [
+    `¿Tuviste algún problema con el enlace de B2 Trading?`,
+    `Mira, no te escribo para insistirte. Te escribo porque el algoritmo de Infiltrus acaba de marcar <b>4 entradas consecutivas en verde</b> en la sesión actual. 🎯🔥\n\n` +
+    `Crear tu cuenta toma literalmente 45 segundos y no te cuesta nada:\n` +
+    `1️⃣ Abre el enlace oficial: <a href="${linkAfiliado}">Registrarme en B2 Trading</a>\n` +
+    `2️⃣ Regístrate con tu correo\n` +
+    `3️⃣ Envíame aquí tu ID de 6 o 7 dígitos\n\n` +
+    `Tu archivo ZIP y tu licencia personalizada ya están generados en el servidor, esperando que vincules tu ID.\n\n` +
+    `👇 <b>Toca el botón para registrarte ahora:</b>`
   ],
 
   botoesFollowUpSemId1: (linkAfiliado) => [
-    [{ text: '🔗 Abrir enlace de registro', url: linkAfiliado }],
-    [{ text: '✅ Ya tengo mi ID listo', callback_data: 'has_account' }],
-    [{ text: '❓ Tengo una duda', callback_data: 'menu_dudas' }]
+    [{ text: '🔗 Crear Cuenta en B2 Trading', url: linkAfiliado }],
+    [{ text: '✅ Ya tengo mi ID', callback_data: 'has_account' }],
+    [{ text: '🆘 Necesito Ayuda', callback_data: 'menu_dudas' }]
   ],
 
-  // Caso A2: Pidió el link o inició, sigue sin enviar ID (4-8 horas / prueba social)
+  // Caso A2: Pidió el link o inició, sigue sin enviar ID (+4 horas tras F1 - Prova Social + FOMO)
   followUpSemId2: (nome) => [
-    `¡Ey, ${nome}! Te paso a contar rápido por acá 📈`,
-    `En la sesión de señales en vivo de recién, el motor M1 volvió a clavar <b>4 operaciones ganadas consecutivas</b> 🎯🔥`,
-    `No quiero que te quedes mirando desde afuera mientras los demás están operando en automático. Solo pásame tu <b>ID de la plataforma</b> para activarte tu herramienta y mandarte el archivo de una vez.\n\n` +
-    `¿Tienes 2 minutitos para dejarlo listo ahora?`
+    `No dejes que tu cupo de Infiltrus expire en el servidor...\n\n` +
+    `Mientras estás dudando, más de <b>140 miembros de nuestra comunidad privada</b> están operando la sesión de la tarde con los filtros de assertividad en pantalla. 📈🔥\n\n` +
+    `No necesitas pagar mensualidades ni comprar cursos milagrosos. La herramienta es <b>100% gratuita</b> para usuarios de B2.\n\n` +
+    `Si en los próximos 60 minutos no recibo tu ID, el sistema reasignará tu licencia al siguiente trader en la lista de espera.\n\n` +
+    `Envíame tu ID ahora mismo para desbloquear tu acceso. 👇`
   ],
 
   botoesFollowUpSemId2: (linkAfiliado) => [
-    [{ text: '🚀 Enviar mi ID ahora', callback_data: 'has_account' }],
-    [{ text: '🔗 No me registré todavía', url: linkAfiliado }],
-    [{ text: '❓ Tengo una pregunta', callback_data: 'menu_dudas' }]
+    [{ text: '🔗 Crear Cuenta en B2 Trading', url: linkAfiliado }],
+    [{ text: '✅ Enviar mi ID', callback_data: 'has_account' }],
+    [{ text: '🆘 Necesito Ayuda', callback_data: 'menu_dudas' }]
   ],
 
-  // Caso B1: Recibió la extensión Demo pero no ha interactuado (45-60 min - Check-in Instalación)
+  // Caso B1: Recibió la extensión Demo (+45 min - Check de Micro-vitória Demo)
   followUpDemoInstalacao: (nome) => [
-    `¡Hola, ${nome}! ¿Cómo vas con la instalación de la extensión? 😊`,
-    `Quería consultarte rápido si pudiste descomprimir el archivo y cargarlo en Google Chrome sin problema.`,
-    `Si te trabaste en algún paso o necesitas una mano, escríbeme por acá que te acompaño personalmente para dejarlo listo en 1 minuto 👍`
+    `¿Pudiste fijar el ícono de Infiltrus en tu Chrome?\n\n` +
+    `Si ya lo hiciste, debes ver las flechas matemáticas y la caja de confirmación sobre el gráfico de B2. 🎯\n\n` +
+    `⚠️ <b>IMPORTANTE:</b> No operes en noticias de alto impacto. Espera que el indicador marque <b>"ENTRADA CONFIRMADA"</b>.\n\n` +
+    `Si tuviste alguna traba para instalar el ZIP, toca abajo y te ayudo en 1 minuto. 👇`
   ],
 
   botoesFollowUpDemoInstalacao: [
-    [{ text: '✅ Ya la tengo instalada', callback_data: 'demo_instalada' }],
-    [{ text: '❓ Ayuda con la instalación', callback_data: 'faq_instalar' }],
-    [{ text: '💳 Activar Cuenta Real ($5 USD)', callback_data: 'faq_como_real' }]
+    [{ text: '✅ Ya la instalé y estoy listo', callback_data: 'demo_instalada' }],
+    [{ text: '🛠️ Ayuda con la instalación', callback_data: 'faq_instalar' }]
   ],
 
-  // Caso B2: Demo instalada (3-5 horas - Desafío Demo y Validación de Señales)
+  // Caso B2: Demo instalada (+3 horas tras Demo 1 - "El Dinero Fantasma")
   followUpDemoTeste: (nome) => [
-    `¡Ey, ${nome}! Te paso a contar rápido por acá 📈`,
-    `En la sesión de recién el algoritmo volvió a meter <b>3 victorias consecutivas</b> en M1 🎯🔥`,
-    `¿Ya pudiste probar un par de señales con el saldo ficticio en tu Cuenta Demo? Cuéntame cómo te fue con el motor M1:`
+    `Pregunta rápida: ¿Cuántas operaciones ganaste hoy en la Demo? 👀\n\n` +
+    `Seguramente ya viste crecer ese saldo ficticio. Pero seamos sinceros...\n\n` +
+    `Ganar $50 o $100 dólares en una cuenta demo <b>no paga el alquiler, no compra comida ni te da libertad</b>. Es dinero fantasma.\n\n` +
+    `El algoritmo ya te demostró de lo que es capaz en tu propia pantalla. La única diferencia entre tú y los que están retirando ganancias todos los días a su cuenta bancaria es que ellos operan en cuenta Real. 💰\n\n` +
+    `Con solo <b>$5 USD</b> (lo que cuesta una taza de café) activas tu cuenta real en B2 y te desbloqueo la <b>Licencia VIP de 60 Días Completos</b>.\n\n` +
+    `¿Vas a seguir jugando con dinero de mentira o empezamos a operar en serio? 👇`
   ],
 
-  botoesFollowUpDemoTeste: [
-    [{ text: '🎯 Ya la probé, ¡es brutal!', callback_data: 'demo_probada' }],
-    [{ text: '⏳ La voy a probar hoy', callback_data: 'demo_tarde' }],
-    [{ text: '💳 Activar Cuenta Real ($5 USD)', callback_data: 'faq_como_real' }]
+  botoesFollowUpDemoTeste: (linkAfiliado = config.brokerAffiliateUrl) => [
+    [{ text: '💳 Depositar $5 y Activar VIP 60 Días', url: linkAfiliado }],
+    [{ text: '📈 Ver Resultados de la Comunidad', callback_data: 'ver_comunidad' }]
   ],
 
-  // Caso B3: Conversión Natural a Cuenta Real / FTD (12-24 horas)
-  followUpDemoConversaoReal: (nome, brokerId) => [
-    `¡Hola, ${nome}! ¿Cómo estás? 😊`,
-    `Ya viste con tus propios ojos cómo analiza el mercado el algoritmo en tu cuenta Demo. Recuerda que tu prueba gratuita de <b>3 días</b> está corriendo ⏳`,
-    `El siguiente paso natural es fondear tu cuenta real para empezar a retirar ganancias de verdad. Puedes arrancar con el monto mínimo de tu país (desde apenas <b>$5 USD</b> o el equivalente en Pix/tarjeta local).\n\n` +
-    `Apenas hagas tu depósito, mi sistema lo detecta en automático y te asciende de inmediato a <b>STATUS VIP REAL (2 MESES / 60 DÍAS)</b> con soporte prioritario 🚀\n\n` +
-    `¿Quieres que te ayude a ver los métodos de pago disponibles para tu país?`
+  // Caso B3: Conversión Natural a Cuenta Real (+12 horas tras Demo 2 - Prova de Saque Carlos)
+  followUpDemoConversaoReal: (nome, brokerId, linkAfiliado = config.brokerAffiliateUrl) => [
+    `Esto fue lo que hizo Carlos (uno de nuestros miembros) hoy:\n\n` +
+    `Inició con un depósito de solo $10 USD esta mañana.\n` +
+    `Siguió 4 señales de Infiltrus con gestión 2x1.\n` +
+    `Cerró su sesión con <b>$38 USD</b> y acaba de solicitar su retiro a Binance. 💸\n\n` +
+    `Los <b>$5 USD</b> de depósito mínimo no son para mí ni para pagar la herramienta (la extensión sigue siendo <b>GRATIS</b>). Es <b>TU capital de trabajo</b>. Sigue estando 100% en tu poder para multiplicarlo y retirarlo cuando quieras.\n\n` +
+    `Al hacer tu primer depósito hoy:\n` +
+    `✅ Tu licencia se extiende automáticamente a <b>60 Días VIP</b>\n` +
+    `✅ Acceso a la configuración de Máxima Asertividad M1\n` +
+    `✅ Plantilla de Gestión de Riesgo Blindada\n\n` +
+    `Toca abajo, deposita tus $5 USD y el bot actualizará tu clave en el acto: 👇`
   ],
 
-  botoesFollowUpDemoConversaoReal: [
-    [{ text: '💳 Ver métodos de pago', callback_data: 'faq_metodos' }],
-    [{ text: '💵 ¿Cuál es el monto mínimo?', callback_data: 'faq_minimo' }],
-    [{ text: '🔄 Ya deposité (Verificar)', callback_data: 'check_deposit_now' }]
+  botoesFollowUpDemoConversaoReal: (linkAfiliado = config.brokerAffiliateUrl) => [
+    [{ text: '🚀 Depositar $5 en B2 Trading', url: linkAfiliado }]
   ],
 
-  // Caso B4: Último llamado / Reserva VIP (36-48 horas)
-  followUpDemoUltimoLlamado: (nome, brokerId) => [
-    `¡Hola de nuevo, ${nome}! Te escribo directo porque tu prueba Demo de 3 días para el ID <code>${brokerId}</code> está por concluir 🎯`,
-    `Recuerda que con tu primer depósito (desde $5 USD) desbloqueas de inmediato <b>2 MESES COMPLETOS (60 Días)</b> de membresía VIP Real para operar en saldo real y retirar todas tus ganancias.\n\n` +
-    `Todo tu saldo queda 100% para ti para operar y retirar cuando quieras. ¡No dejes pasar la oportunidad de multiplicar tu propio capital! 📈\n\n` +
-    `Si necesitas cualquier ayuda para fondear tu cuenta, estoy por acá para asistirte.`
+  // Caso B4: Último llamado / Escasez Dura (+24 horas tras Demo 3)
+  followUpDemoUltimoLlamado: (nome, brokerId, linkAfiliado = config.brokerAffiliateUrl) => [
+    `Tu período de prueba Demo está llegando a su fin. ⏳\n\n` +
+    `Las licencias gratuitas de servidor requieren recursos de procesamiento en tiempo real. En pocas horas, tu clave Demo será dada de baja para liberar espacio a nuevos usuarios.\n\n` +
+    `Para mantener tu algoritmo activo y recibir la <b>Licencia VIP de 2 Meses (60 Días)</b>, solo necesitas fondear tu cuenta de B2 Trading con el mínimo de <b>$5 USD</b>.\n\n` +
+    `No dejes que tu herramienta se desactive:\n` +
+    `👉 <a href="${linkAfiliado}"><b>Clic aquí para Fondear tu Cuenta en B2 Trading</b></a>\n\n` +
+    `Nos vemos adentro de la Sala VIP. 🚀`
   ],
 
-  botoesFollowUpDemoUltimoLlamado: [
-    [{ text: '💳 ¿Cómo hago el depósito?', callback_data: 'faq_metodos' }],
-    [{ text: '🔄 Ya lo hice, verificar', callback_data: 'check_deposit_now' }],
-    [{ text: '❓ Tengo una pregunta', callback_data: 'menu_dudas' }]
+  botoesFollowUpDemoUltimoLlamado: (linkAfiliado = config.brokerAffiliateUrl) => [
+    [{ text: '⚡ Activar VIP Real con $5 USD', url: linkAfiliado }]
   ],
 
   // Compatibilidad con llamadas legacy

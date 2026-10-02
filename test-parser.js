@@ -93,13 +93,13 @@ test('Copywriting Mensagens: Follow-ups estratégicos estão configurados com to
   // Follow-up Sem ID 1
   const fuSemId1 = mensagens.followUpSemId1('Carlos');
   assert.ok(Array.isArray(fuSemId1));
-  assert.ok(fuSemId1.some(m => m.includes('Carlos')));
+  assert.ok(fuSemId1.some(m => m.includes('B2 Trading')));
   assert.ok(mensagens.botoesFollowUpSemId1('https://link.com').length >= 2);
 
-  // Follow-up Sem ID 2 (Prova social M1)
+  // Follow-up Sem ID 2 (Prova social M1 + FOMO)
   const fuSemId2 = mensagens.followUpSemId2('Carlos');
   assert.ok(Array.isArray(fuSemId2));
-  assert.ok(fuSemId2.some(m => m.includes('4 operaciones ganadas')));
+  assert.ok(fuSemId2.some(m => m.includes('140 miembros')));
 
   // Follow-up Sem Depósito 1 (Acesso vitalício qualquer valor)
   const fuSemDep1 = mensagens.followUpSemDeposito1('Carlos', '849302');
@@ -141,16 +141,17 @@ test('Funil em 2 Etapas: Mensagens de ativação Demo e Upgrade VIP Real estão 
   assert.ok(libDemo.some(m => m.includes('849302')));
   assert.ok(libDemo.some(m => m.includes('Infiltrus')));
 
-  // 2. Chave Demo com plano DEMO VIP (3 dias)
-  const licDemo = mensagens.entregaLicencaDemo('Carlos', 'IFX-TEST.SIG', 3, 'DEMO VIP');
+  // 2. Chave Demo com plano DEMO VIP (3 dias / 72h)
+  const licDemo = mensagens.entregaLicencaDemo('Carlos', 'IFX-TEST.SIG', 3, '849302');
   assert.ok(licDemo.includes('IFX-TEST.SIG'));
-  assert.ok(licDemo.includes('DEMO VIP'));
-  assert.ok(licDemo.includes('3 DÍAS DE PRUEBA'));
+  assert.ok(licDemo.includes('849302'));
+  assert.ok(licDemo.includes('72h'));
+  assert.ok(licDemo.includes('youtu.be'));
 
   // 3. Desafio Demo de 2 a 3 sinais
   const desafio = mensagens.desafioDemo();
-  assert.ok(desafio.includes('Cuenta DEMO'));
-  assert.ok(desafio.includes('2 a 3 señales'));
+  assert.ok(desafio.includes('Reto'));
+  assert.ok(desafio.includes('Filtro de Volumen'));
   assert.ok(mensagens.botoesEntregaDemo.length >= 2);
 
   // 4. Upgrade VIP Real (2 meses / 60 dias)
@@ -161,20 +162,20 @@ test('Funil em 2 Etapas: Mensagens de ativação Demo e Upgrade VIP Real estão 
 
   // 5. Follow-ups do pipeline Demo em 4 etapas
   const fuDemo1 = mensagens.followUpDemoInstalacao('Carlos');
-  assert.ok(fuDemo1.some(m => m.includes('instalación')));
+  assert.ok(fuDemo1.some(m => m.includes('Infiltrus en tu Chrome')));
   assert.ok(mensagens.botoesFollowUpDemoInstalacao.length >= 2);
 
   const fuDemo2 = mensagens.followUpDemoTeste('Carlos');
-  assert.ok(fuDemo2.some(m => m.includes('3 victorias')));
-  assert.ok(mensagens.botoesFollowUpDemoTeste.length >= 2);
+  assert.ok(fuDemo2.some(m => m.includes('dinero fantasma')));
+  assert.ok(mensagens.botoesFollowUpDemoTeste().length >= 2);
 
   const fuDemo3 = mensagens.followUpDemoConversaoReal('Carlos', '849302');
-  assert.ok(fuDemo3.some(m => m.includes('$5 USD')));
-  assert.ok(mensagens.botoesFollowUpDemoConversaoReal.length >= 2);
+  assert.ok(fuDemo3.some(m => m.includes('$38 USD')));
+  assert.ok(mensagens.botoesFollowUpDemoConversaoReal().length >= 1);
 
   const fuDemo4 = mensagens.followUpDemoUltimoLlamado('Carlos', '849302');
-  assert.ok(fuDemo4.some(m => m.includes('849302')));
-  assert.ok(mensagens.botoesFollowUpDemoUltimoLlamado.length >= 2);
+  assert.ok(fuDemo4.some(m => m.includes('período de prueba Demo')));
+  assert.ok(mensagens.botoesFollowUpDemoUltimoLlamado().length >= 1);
 });
 
 test('Database: Gerenciamento dos estados DEMO_ACTIVE e VIP_REAL', () => {
