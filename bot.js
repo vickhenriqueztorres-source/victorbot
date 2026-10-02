@@ -309,7 +309,7 @@ async function handlePrivateMessage(msg) {
         `  • Sem ID 1: ${stats.followUpsSent?.noId_1 || 0} | Sem ID 2: ${stats.followUpsSent?.noId_2 || 0}\n` +
         `  • Demo 1 (Instalação): ${stats.followUpsSent?.demo_1 || 0}\n` +
         `  • Demo 2 (Validação Sinais): ${stats.followUpsSent?.demo_2 || 0}\n` +
-        `  • Demo 3 (Ponte Real $10): ${stats.followUpsSent?.demo_3 || 0}\n` +
+        `  • Demo 3 (Ponte Real $15): ${stats.followUpsSent?.demo_3 || 0}\n` +
         `  • Demo 4 (Último Chamado): ${stats.followUpsSent?.demo_4 || 0}\n\n` +
         `<i>Comandos disponíveis:</i>\n` +
         `• <code>/liberar &lt;ID_CORRETORA&gt; [demo|real]</code> - Força liberação manual\n` +
@@ -336,7 +336,7 @@ async function handlePrivateMessage(msg) {
         `2 = Sem ID 2 (Prova social e FOMO)\n` +
         `3 = Demo 1 (Check-in de Instalação no Chrome)\n` +
         `4 = Demo 2 (Desafio & Validação Sinais M1)\n` +
-        `5 = Demo 3 (Ponte Real / Depósito $10 USD)\n` +
+        `5 = Demo 3 (Ponte Real / Depósito $15 USD)\n` +
         `6 = Demo 4 (Último Chamado / Reativação Dura)`;
       return api.sendMessage(chatId, msg);
     }
@@ -369,7 +369,7 @@ async function handlePrivateMessage(msg) {
       } else if (typeNum === '5') {
         const text = mensagens.followUpDemoConversaoReal(name, brokerId, config.brokerAffiliateUrl);
         await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpDemoConversaoReal(config.brokerAffiliateUrl) } });
-        return api.sendMessage(chatId, `✅ Follow-up Demo 3 (Prova de Saque Carlos $10->$38) disparado para ${name}!`);
+        return api.sendMessage(chatId, `✅ Follow-up Demo 3 (Prova de Saque Carlos $15->$38) disparado para ${name}!`);
       } else if (typeNum === '6') {
         const text = mensagens.followUpDemoUltimoLlamado(name, brokerId, config.brokerAffiliateUrl);
         await sendHumanMessage(targetChat, text, { reply_markup: { inline_keyboard: mensagens.botoesFollowUpDemoUltimoLlamado(config.brokerAffiliateUrl) } });
@@ -671,7 +671,7 @@ async function handleCallbackQuery(query) {
     const keyboard = {
       inline_keyboard: [
         [{ text: '✅ Ya la tengo instalada', callback_data: 'demo_instalada' }],
-        [{ text: '💳 Activar Cuenta Real ($10 USD)', callback_data: 'faq_como_real' }],
+        [{ text: '💳 Activar Cuenta Real ($15 USD)', callback_data: 'faq_como_real' }],
         [{ text: '⬅️ Volver', callback_data: 'menu_dudas' }]
       ]
     };
@@ -683,7 +683,7 @@ async function handleCallbackQuery(query) {
     const keyboard = {
       inline_keyboard: [
         [{ text: '🎯 Ya la probé en Demo', callback_data: 'demo_probada' }],
-        [{ text: '💳 Pasar a Cuenta Real ($10 USD)', callback_data: 'faq_como_real' }]
+        [{ text: '💳 Pasar a Cuenta Real ($15 USD)', callback_data: 'faq_como_real' }]
       ]
     };
     return sendHumanMessage(chatId, msg, { reply_markup: keyboard }, 1600);
@@ -693,7 +693,7 @@ async function handleCallbackQuery(query) {
     const msg = mensagens.respostaDemoProbada(firstName);
     const keyboard = {
       inline_keyboard: [
-        [{ text: '💳 Activar Cuenta Real ($10 USD)', callback_data: 'faq_como_real' }],
+        [{ text: '💳 Activar Cuenta Real ($15 USD)', callback_data: 'faq_como_real' }],
         [{ text: '💵 ¿Cuál es el monto mínimo?', callback_data: 'faq_minimo' }],
         [{ text: '🔄 Ya deposité (Verificar)', callback_data: 'check_deposit_now' }]
       ]
@@ -716,7 +716,7 @@ async function handleCallbackQuery(query) {
     const msg = mensagens.resultadosComunidad(firstName);
     const keyboard = {
       inline_keyboard: [
-        [{ text: '💳 Depositar $10 y Activar VIP 60 Días', url: config.brokerAffiliateUrl }],
+        [{ text: '💳 Depositar $15 y Activar VIP 60 Días', url: config.brokerAffiliateUrl }],
         [{ text: '🔄 Ya deposité (Verificar)', callback_data: 'check_deposit_now' }],
         [{ text: '⬅️ Volver', callback_data: 'faq_volver' }]
       ]
@@ -729,7 +729,7 @@ async function handleCallbackQuery(query) {
  * Motor autônomo de Follow-Up Estratégico (Funil em 2 Etapas)
  * Executa periodicamente sem travar o bot e recupera leads em todas as fases:
  * - Leads sem ID: estímulo de cadastro e prova social.
- * - Leads com Demo ativa: suporte de instalação, validação de sinais e ponte para Conta Real ($10 USD).
+ * - Leads com Demo ativa: suporte de instalação, validação de sinais e ponte para Conta Real ($15 USD).
  */
 async function checkAndSendFollowUps() {
   try {
@@ -830,7 +830,7 @@ async function checkAndSendFollowUps() {
             }
           }
 
-          // Follow-up B3 (Conversão para Conta Real / $10 USD): 12h após Follow-up B2
+          // Follow-up B3 (Conversão para Conta Real / $15 USD): 12h após Follow-up B2
           const lastFu2 = user.followUps.demo_2 || user.followUps.noDeposit_2;
           if (lastFu2 && !user.followUps.demo_3) {
             const timeSinceFu2 = now - new Date(lastFu2).getTime();

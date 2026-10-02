@@ -161,21 +161,21 @@ test('Funil em 2 Etapas: Mensagens de ativação Demo e Upgrade VIP Real estão 
   assert.ok(upReal.includes('VIP REAL'));
   assert.ok(upReal.includes('2 MESES DE ACCESO VIP'));
 
-  // 5. Follow-ups do pipeline Demo em 4 etapas (Hardened Persona + $10 USD Mínimo)
+  // 5. Follow-ups do pipeline Demo em 4 etapas (Hardened Persona + $15 USD Mínimo)
   const fuDemo1 = mensagens.followUpDemoInstalacao('Carlos');
   assert.ok(fuDemo1.some(m => m.includes('extensión en tu Chrome')));
   assert.ok(mensagens.botoesFollowUpDemoInstalacao.length >= 2);
 
   const fuDemo2 = mensagens.followUpDemoTeste('Carlos');
-  assert.ok(fuDemo2.some(m => m.includes('monopoly') && m.includes('$10 USD')));
+  assert.ok(fuDemo2.some(m => m.includes('monopoly') && m.includes('$15 USD')));
   assert.ok(mensagens.botoesFollowUpDemoTeste().length >= 2);
 
   const fuDemo3 = mensagens.followUpDemoConversaoReal('Carlos', '849302');
-  assert.ok(fuDemo3.some(m => m.includes('$38 USD') && m.includes('$10 USD')));
+  assert.ok(fuDemo3.some(m => m.includes('$38 USD') && m.includes('$15 USD')));
   assert.ok(mensagens.botoesFollowUpDemoConversaoReal().length >= 1);
 
   const fuDemo4 = mensagens.followUpDemoUltimoLlamado('Carlos', '849302');
-  assert.ok(fuDemo4.some(m => m.includes('disciplina de ejecutar') && m.includes('$10')));
+  assert.ok(fuDemo4.some(m => m.includes('disciplina de ejecutar') && m.includes('$15')));
   assert.ok(mensagens.botoesFollowUpDemoUltimoLlamado().length >= 1);
 
   // 6. Script de Reativação Dura direto
