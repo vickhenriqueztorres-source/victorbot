@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { config } from './config.js';
 import { db } from './database.js';
 import { TelegramApi } from './telegram-api.js';
-import { parseChannelNotification } from './channel-parser.js';
+import { parseChannelNotification, extractBrokerId } from './channel-parser.js';
 import { issueClientLicense } from './license-service.js';
 import { mensagens } from './mensagens.js';
 
@@ -413,23 +413,11 @@ async function handlePrivateMessage(msg) {
     }
   }
 
-  // 2. INÍCIO DA CONVERSA (/start ou Saudações em Espanhol/Português)
-  const isGreeting = text === '/start' || /^(hola|buenas|buenos d[ií]as|buenas tardes|buenas noches|qu[eé] tal|saludos|empezar|iniciar|acceso|quiero|link|oi|ol[aá]|opa|come[çc]ar)/i.test(text);
-
-  if (isGreeting || !user.step || user.step === 'GREETING') {
-    db.saveUser(chatId, { step: 'AWAITING_REGISTRATION_CHOICE' });
-    const welcome = mensagens.boasVindas(firstName);
-    const keyboard = {
-      inline_keyboard: mensagens.botoesBoasVindas
-    };
-    return sendHumanMessage(chatId, welcome, { reply_markup: keyboard });
-  }
-
-  // 3. FLUXO DE VERIFICAÇÃO DE ID DA CORRETORA (MODELO EM 2 ETAPAS)
-  // Tenta extrair o ID numérico digitado pelo cliente (ex: "meu id é 849302" ou "849302")
-  const idMatch = text.match(/\b([0-9]{4,12})\b/);
-  if (idMatch) {
-    const brokerId = idMatch[1];
+  // 2. EXTRAÇÃO E VERIFICAÇÃO DE ID DA CORRETORA (ALTA PRIORIDADE - MODELO EM 2 ETAPAS)
+  // Detecta tanto IDs puramente numéricos (ex: 849302) quanto alfanuméricos (ex: tVXaZ5e)
+  const detectedBrokerId = extractBrokerId(text, user);
+  if (detectedBrokerId) {
+    const brokerId = detectedBrokerId;
     db.saveUser(chatId, {
       brokerId,
       step: 'CHECKING_ID'
@@ -458,6 +446,18 @@ async function handlePrivateMessage(msg) {
     // Não bloqueia! Confirma registro com entusiasmo e libera IMEDIATAMENTE a ferramenta para teste Demo!
     await sendHumanMessage(chatId, mensagens.confirmacaoIdLiberacaoDemo(firstName, brokerId), {}, 1600);
     return deliverAccessToUser(chatId, firstName, brokerId, 'DEMO VIP');
+  }
+
+  // 3. INÍCIO DA CONVERSA (/start ou Saudações em Espanhol/Português)
+  const isGreeting = text === '/start' || /^(hola|buenas|buenos d[ií]as|buenas tardes|buenas noches|qu[eé] tal|saludos|empezar|iniciar|acceso|quiero|link|oi|ol[aá]|opa|come[çc]ar)/i.test(text);
+
+  if (isGreeting || !user.step || user.step === 'GREETING') {
+    db.saveUser(chatId, { step: 'AWAITING_REGISTRATION_CHOICE' });
+    const welcome = mensagens.boasVindas(firstName);
+    const keyboard = {
+      inline_keyboard: mensagens.botoesBoasVindas
+    };
+    return sendHumanMessage(chatId, welcome, { reply_markup: keyboard });
   }
 
   // 4. DETECÇÃO INTELIGENTE DE DÚVIDAS E OBJEÇÕES (PALAVRAS-CHAVE)

@@ -4,7 +4,7 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseChannelNotification } from './channel-parser.js';
+import { parseChannelNotification, extractBrokerId } from './channel-parser.js';
 import { issueClientLicense } from './license-service.js';
 import { db } from './database.js';
 import { mensagens } from './mensagens.js';
@@ -43,6 +43,33 @@ test('Channel Parser: Fallback para ID numérico isolado quando não há prefixo
   assert.equal(parsed.type, 'DEPOSITO');
   assert.equal(parsed.brokerId, '789123');
   assert.equal(parsed.amount, '100,00');
+});
+
+test('Channel Parser & ID Parser: Suporta IDs alfanuméricos reais da B2 Trading (ex: tVXaZ5e)', () => {
+  // 1. Notificação do canal com ID alfanumérico
+  const channelText = '🎉 Depósito aprovado!\nID: tVXaZ5e\nValor: $ 15.00\nStatus: Confirmado';
+  const parsed = parseChannelNotification(channelText);
+  assert.equal(parsed.type, 'DEPOSITO');
+  assert.equal(parsed.brokerId, 'tVXaZ5e');
+  assert.equal(parsed.amount, '15.00');
+
+  // 2. Extração de ID direto digitado pelo usuário no chat
+  assert.equal(extractBrokerId('tVXaZ5e'), 'tVXaZ5e');
+  assert.equal(extractBrokerId('mi id es tVXaZ5e'), 'tVXaZ5e');
+  assert.equal(extractBrokerId('ID: tVXaZ5e'), 'tVXaZ5e');
+  assert.equal(extractBrokerId('cuenta: tVXaZ5e'), 'tVXaZ5e');
+  assert.equal(extractBrokerId('849302'), '849302');
+  assert.equal(extractBrokerId('ID: 849302'), '849302');
+  assert.equal(extractBrokerId('hola, mi id es tVXaZ5e'), 'tVXaZ5e');
+
+  // 3. Usuário no estado AWAITING_ID que digita código
+  assert.equal(extractBrokerId('tVXaZ5e', { step: 'AWAITING_ID' }), 'tVXaZ5e');
+  assert.equal(extractBrokerId('987654', { step: 'AWAITING_ID' }), '987654');
+
+  // 4. Casos negativos (não devem ser interpretados como ID)
+  assert.equal(extractBrokerId('/start'), null);
+  assert.equal(extractBrokerId('hola'), null);
+  assert.equal(extractBrokerId('cuánto cuesta'), null);
 });
 
 test('License Service: Emite código de licença ECDSA P-256 válido com prefixo IFX-', async () => {
